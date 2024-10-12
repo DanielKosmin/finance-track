@@ -1,14 +1,10 @@
 package com.kosmin.finance.finance_tracker.controller;
 
-import com.kosmin.finance.finance_tracker.model.CsvModel;
-import com.kosmin.finance.finance_tracker.service.CsvParsingService;
-import java.util.List;
+import com.kosmin.finance.finance_tracker.model.Response;
+import com.kosmin.finance.finance_tracker.service.FinanceTrackerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -16,15 +12,17 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class RequestController {
 
-  private final CsvParsingService csvParsingService;
+  private final FinanceTrackerService financeTrackerService;
 
   @PostMapping("upload")
-  public ResponseEntity<List<CsvModel>> uploadCsvFile(@RequestParam("file") MultipartFile file) {
+  public ResponseEntity<String> uploadCsvFile(@RequestParam("file") MultipartFile file) {
 
-    try {
-      return ResponseEntity.ok(csvParsingService.processCsv(file));
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().build();
-    }
+    return financeTrackerService.processCsv(file);
+  }
+
+  @GetMapping("records")
+  public ResponseEntity<Response> getAllFinancialRecords() {
+
+    return financeTrackerService.getAllFinancialRecords();
   }
 }

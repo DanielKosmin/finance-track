@@ -1,3 +1,4 @@
 queries:
   map:
-    example: "SELECT *"
+    insert-financial-records: "INSERT INTO financial_records (account_number, transaction_description, transaction_date, transaction_type, transaction_amount, balance) VALUES(?, ?, ?, ?, ?, ?)"
+    get-financial-record: "SELECT * FROM financial_records"
