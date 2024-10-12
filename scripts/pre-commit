@@ -1,0 +1,23 @@
+#!/bin/sh
+
+stagedFiles=$(git diff --staged --name-only)
+
+echo "Running spotlessApply"
+./gradlew spotlessApply
+
+for file in $stagedFiles; do
+    if test -f "$file"; then
+        git add $file
+        echo $file
+    fi
+done
+
+[ $RESULT -ne 0 ] && exit 1
+
+echo "Running Unit Tests"
+./gradlew test
+status=$?
+if [ $status -ne 0 ]; then
+    exit 1
+fi
+exit 0
