@@ -1,0 +1,13 @@
+spring:
+  config:
+    import: queries.yml
+  profiles:
+    active: local
+  datasource:
+    url: ${SQL_DB_URL}
+    username: ${USERNAME}
+    password: ${PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
