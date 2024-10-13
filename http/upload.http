@@ -3,6 +3,6 @@ POST {{FINANCE_TRACKER_BASE_URL}}/expenses/v1/upload
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary
-Content-Disposition: form-data; name="file"; filename="{{FILENAME}}"
+Content-Disposition: form-data; name="file"; filename="<filename>.csv"
 
-< path/to/csv
+< /path/to/csv/<filename>.csv

@@ -12,9 +12,11 @@ import lombok.NoArgsConstructor;
 public class FinancialRecordsEntity {
 
   private int recordId;
+  private int parentId;
   private String transactionDescription;
   private String transactionDate;
   private String transactionType;
+  private String transactionCategory;
   private Double transactionAmount;
   private Double balance;
 }

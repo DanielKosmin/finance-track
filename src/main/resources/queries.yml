@@ -1,4 +1,27 @@
+tables:
+  create-banking-table: |
+    CREATE TABLE checking_account_records (
+        record_id               INT auto_increment primary key,
+        transaction_description varchar(255)   not null,
+        transaction_date        DATE           not null,
+        transaction_type        varchar(255)   not null,
+        transaction_amount      decimal(10, 2) not null,
+        balance                 decimal(10, 2) not null
+    );
+  create-credit-table: |
+    CREATE TABLE credit_records (
+        record_id               INT auto_increment primary key,
+        parent_id               INT            null,
+        transaction_date        DATE           not null,
+        transaction_description varchar(255)   not null,
+        transaction_category    varchar(255)   not null,
+        transaction_type        varchar(255)   not null,
+        transaction_amount      decimal(10, 2) not null,
+        constraint foreign key (parent_id) references checking_account_records (record_id) on delete set null
+    );
+
 queries:
   map:
-    insert-financial-records: "INSERT INTO checking_account_records (transaction_description, transaction_date, transaction_type, transaction_amount, balance) VALUES(?, ?, ?, ?, ?)"
-    get-financial-record: "SELECT * FROM checking_account_records"
+    insert-banking-records: "INSERT INTO checking_account_records (transaction_description, transaction_date, transaction_type, transaction_amount, balance) VALUES(?, ?, ?, ?, ?)"
+    get-banking-record: "SELECT * FROM checking_account_records"
+    insert-credit-records: "INSERT INTO credit_records (transaction_date, transaction_description, transaction_category, transaction_type, transaction_amount) VALUES(?, ?, ?, ?, ?)"

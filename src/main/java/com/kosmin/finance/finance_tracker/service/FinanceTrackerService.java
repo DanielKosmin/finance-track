@@ -2,7 +2,9 @@ package com.kosmin.finance.finance_tracker.service;
 
 import com.kosmin.finance.finance_tracker.model.Response;
 import com.kosmin.finance.finance_tracker.model.Status;
+import com.kosmin.finance.finance_tracker.model.Type;
 import com.kosmin.finance.finance_tracker.service.databaseOperations.DbOperationsService;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,8 +31,16 @@ public class FinanceTrackerService {
         return ResponseEntity.badRequest().body("File must have a .csv extension.");
       }
 
-      asyncCsvProcessingService.handleCsvProcessing(file);
+      asyncCsvProcessingService.handleCsvProcessing(
+          file,
+          (Optional.ofNullable(fileName)
+                  .orElseThrow(() -> new RuntimeException("Filename is null"))
+                  .contains("credit")
+              ? Type.CREDIT
+              : Type.BANKING));
       return ResponseEntity.accepted().body("CSV File Successfully received and processing");
+    } catch (RuntimeException e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
     } catch (Exception e) {
       log.error(e.getMessage());
       return ResponseEntity.internalServerError().body(e.getMessage());
