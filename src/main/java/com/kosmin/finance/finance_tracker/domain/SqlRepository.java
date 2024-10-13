@@ -1,6 +1,7 @@
 package com.kosmin.finance.finance_tracker.domain;
 
 import com.kosmin.finance.finance_tracker.config.SqlQueriesConfig;
+import com.kosmin.finance.finance_tracker.model.BankingAccountModel;
 import com.kosmin.finance.finance_tracker.model.FinancialRecordsEntity;
 import com.kosmin.finance.finance_tracker.model.Response;
 import com.kosmin.finance.finance_tracker.model.Status;
@@ -20,17 +21,17 @@ public class SqlRepository {
   private final JdbcTemplate jdbcTemplate;
   private final SqlQueriesConfig sqlQueriesConfig;
 
-  public void insertFinancialRecords(FinancialRecordsEntity recordsEntity) {
+  public void insertFinancialRecords(BankingAccountModel bankingAccountModel) {
     int insertionResponse =
         jdbcTemplate.update(
             sqlQueriesConfig.getMap().get("insert-financial-records"),
-            recordsEntity.getAccountNumber(),
-            recordsEntity.getTransactionDescription(),
-            recordsEntity.getTransactionDate(),
-            recordsEntity.getTransactionType(),
-            recordsEntity.getTransactionAmount(),
-            recordsEntity.getBalance());
-    if (insertionResponse != 1) log.error("Insert Financial Records Failed for {}", recordsEntity);
+            bankingAccountModel.getTransactionDescription(),
+            bankingAccountModel.getTransactionDate(),
+            bankingAccountModel.getTransactionType(),
+            bankingAccountModel.getTransactionAmount(),
+            bankingAccountModel.getBalance());
+    if (insertionResponse != 1)
+      log.error("Insert Financial Records Failed for {}", bankingAccountModel);
   }
 
   public Response getAllFinancialRecords() {
@@ -43,7 +44,6 @@ public class SqlRepository {
   private FinancialRecordsEntity mapRows(ResultSet rs, int rowNum) throws SQLException {
     return FinancialRecordsEntity.builder()
         .recordId(rs.getInt("record_id"))
-        .accountNumber(rs.getString("account_number"))
         .transactionDescription(rs.getString("transaction_description"))
         .transactionDate(rs.getString("transaction_date"))
         .transactionType(rs.getString("transaction_type"))
