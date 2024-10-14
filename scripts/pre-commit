@@ -23,7 +23,7 @@ done
 
 # Run Unit Tests
 echo "Running Unit Tests"
-./gradlew test
+./gradlew unitTest
 status=$?
 if [ $status -ne 0 ]; then
     echo "Unit Tests failed."
