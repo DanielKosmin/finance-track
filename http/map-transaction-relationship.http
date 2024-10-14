@@ -1,0 +1,10 @@
+### POST upload file
+POST {{FINANCE_TRACKER_BASE_URL}}/expenses/v1/map_relationship
+Content-Type: application/json
+
+{
+  "transactionStartDate": "",
+  "transactionEndDate": "",
+  "transactionDescription": "",
+  "transactionType": ""
+}
