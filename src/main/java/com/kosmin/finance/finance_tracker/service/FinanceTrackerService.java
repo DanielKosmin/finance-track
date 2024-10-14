@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,7 +24,31 @@ public class FinanceTrackerService {
   private final AsyncCsvProcessingService asyncCsvProcessingService;
   private final DbOperationsService dbOperationsService;
 
-  public ResponseEntity<String> processCsv(MultipartFile file) {
+  public ResponseEntity<Response> createTables() {
+    try {
+      dbOperationsService.createTables();
+      return ResponseEntity.status(HttpStatus.CREATED)
+          .body(Response.builder().status(Status.SUCCESS.getValue()).build());
+    } catch (BadSqlGrammarException e) {
+      log.error(e.getMessage());
+      return ResponseEntity.badRequest()
+          .body(
+              Response.builder()
+                  .status(Status.FAILED.getValue())
+                  .errorMessage("Unable to create tables, tables already exist")
+                  .build());
+    } catch (Exception e) {
+      log.error(e.getMessage());
+      return ResponseEntity.internalServerError()
+          .body(
+              Response.builder()
+                  .status(Status.FAILED.getValue())
+                  .errorMessage(e.getMessage())
+                  .build());
+    }
+  }
+
+  public ResponseEntity<String> insertRecords(MultipartFile file) {
     try {
       if (file.isEmpty()) {
         return ResponseEntity.badRequest().body("File is empty.");

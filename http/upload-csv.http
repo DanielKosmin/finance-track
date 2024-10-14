@@ -1,5 +1,5 @@
 ### POST upload file
-POST {{FINANCE_TRACKER_BASE_URL}}/expenses/v1/upload
+POST {{FINANCE_TRACKER_BASE_URL}}/expenses/v1/insert
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary

@@ -18,13 +18,18 @@ public class RequestController {
 
   private final FinanceTrackerService financeTrackerService;
 
-  @PostMapping("upload")
-  public ResponseEntity<String> uploadCsvFile(@RequestParam("file") MultipartFile file) {
-
-    return financeTrackerService.processCsv(file);
+  @PostMapping("create")
+  public ResponseEntity<Response> createTables() {
+    return financeTrackerService.createTables();
   }
 
-  @PostMapping("map_relationship")
+  @PostMapping("insert")
+  public ResponseEntity<String> insertRecords(@RequestParam("file") MultipartFile file) {
+
+    return financeTrackerService.insertRecords(file);
+  }
+
+  @PutMapping("map_relationship")
   public ResponseEntity<Response> mapRelationship(
       @Valid @RequestBody TransactionMappingRequest request) {
     return financeTrackerService.createTableRelationship(request);

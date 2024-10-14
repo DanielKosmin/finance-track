@@ -1,6 +1,8 @@
 package com.kosmin.finance.finance_tracker.service.databaseOperations;
 
-import com.kosmin.finance.finance_tracker.domain.SqlRepository;
+import com.kosmin.finance.finance_tracker.domain.create.CreateTables;
+import com.kosmin.finance.finance_tracker.domain.insert.InsertTableRecords;
+import com.kosmin.finance.finance_tracker.domain.query.QueryTableRecords;
 import com.kosmin.finance.finance_tracker.domain.update.UpdateForeignKey;
 import com.kosmin.finance.finance_tracker.model.BankingAccountModel;
 import com.kosmin.finance.finance_tracker.model.CreditCardRecordsModel;
@@ -13,22 +15,29 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DbOperationsServiceImpl implements DbOperationsService {
 
-  private final SqlRepository sqlRepository;
+  private final InsertTableRecords insertTableRecords;
   private final UpdateForeignKey updateForeignKey;
+  private final QueryTableRecords queryTableRecords;
+  private final CreateTables createTables;
+
+  @Override
+  public void createTables() {
+    createTables.createTables();
+  }
 
   @Override
   public void insertBankingInformation(BankingAccountModel bankingAccountModel) {
-    sqlRepository.insertBankingInformation(bankingAccountModel);
+    insertTableRecords.insertBankingInformation(bankingAccountModel);
   }
 
   @Override
   public void insertCreditInformation(CreditCardRecordsModel creditCardRecordsModel) {
-    sqlRepository.insertCreditInformation(creditCardRecordsModel);
+    insertTableRecords.insertCreditInformation(creditCardRecordsModel);
   }
 
   @Override
   public Response getAllFinancialRecords() {
-    return sqlRepository.getAllFinancialRecords();
+    return queryTableRecords.getAllFinancialRecords();
   }
 
   @Override

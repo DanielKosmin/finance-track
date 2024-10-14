@@ -22,8 +22,8 @@ tables:
 
 queries:
   map:
-    insert-banking-records: "INSERT INTO checking_account_records (transaction_description, transaction_date, transaction_type, transaction_amount, balance) VALUES(?, ?, ?, ?, ?)"
+    insert-banking-records: "INSERT INTO checking_account_records (transaction_description, transaction_date, transaction_type, transaction_amount, balance) VALUES(:transactionDescription, :transactionDate, :transactionType, :transactionAmount, :balance)"
+    insert-credit-records: "INSERT INTO credit_records (transaction_date, transaction_description, transaction_category, transaction_type, transaction_amount) VALUES(:transactionDate, :transactionDescription, :transactionCategory, :transactionType, :transactionAmount)"
     get-banking-record: "SELECT * FROM checking_account_records"
-    insert-credit-records: "INSERT INTO credit_records (transaction_date, transaction_description, transaction_category, transaction_type, transaction_amount) VALUES(?, ?, ?, ?, ?)"
     get-parent-id-of-transaction: "SELECT record_id FROM checking_account_records WHERE transaction_date >= :startDate AND transaction_date <= :endDate AND transaction_description LIKE :description AND transaction_type = :type ORDER BY transaction_amount DESC LIMIT 1"
     update-foreign-key-with-parent-id: "UPDATE credit_records SET parent_id = :parentId WHERE transaction_date >= :startDate AND transaction_date <= :endDate AND transaction_type = :type"
