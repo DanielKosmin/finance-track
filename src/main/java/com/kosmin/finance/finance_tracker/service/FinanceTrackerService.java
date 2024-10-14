@@ -1,12 +1,15 @@
 package com.kosmin.finance.finance_tracker.service;
 
+import com.kosmin.finance.finance_tracker.exception.ParentTransactionNotFoundException;
 import com.kosmin.finance.finance_tracker.model.Response;
 import com.kosmin.finance.finance_tracker.model.Status;
+import com.kosmin.finance.finance_tracker.model.TransactionMappingRequest;
 import com.kosmin.finance.finance_tracker.model.Type;
 import com.kosmin.finance.finance_tracker.service.databaseOperations.DbOperationsService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -44,6 +47,25 @@ public class FinanceTrackerService {
     } catch (Exception e) {
       log.error(e.getMessage());
       return ResponseEntity.internalServerError().body(e.getMessage());
+    }
+  }
+
+  public ResponseEntity<Response> createTableRelationship(TransactionMappingRequest request) {
+    Response response = Response.builder().build();
+    try {
+      return ResponseEntity.status(HttpStatus.CREATED)
+          .body(dbOperationsService.createTableRelationship(request));
+    } catch (EmptyResultDataAccessException | ParentTransactionNotFoundException e) {
+      log.error(e.getMessage());
+      return ResponseEntity.badRequest()
+          .body(
+              response.toBuilder()
+                  .errorMessage("no parent request id found for filtered search")
+                  .build());
+    } catch (Exception e) {
+      log.error(e.getMessage());
+      return ResponseEntity.internalServerError()
+          .body(response.toBuilder().errorMessage(e.getMessage()).build());
     }
   }
 

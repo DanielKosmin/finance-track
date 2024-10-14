@@ -3,8 +3,8 @@ POST {{FINANCE_TRACKER_BASE_URL}}/expenses/v1/map_relationship
 Content-Type: application/json
 
 {
-  "transactionStartDate": "",
-  "transactionEndDate": "",
-  "transactionDescription": "",
-  "transactionType": ""
+  "transactionStartDate": "2024-10-01",
+  "transactionEndDate": "2024-10-31",
+  "transactionDescription": "%chase%",
+  "transactionType": "Debit"
 }

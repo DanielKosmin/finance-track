@@ -25,9 +25,9 @@ public class RequestController {
   }
 
   @PostMapping("map_relationship")
-  public ResponseEntity<String> mapRelationship(
+  public ResponseEntity<Response> mapRelationship(
       @Valid @RequestBody TransactionMappingRequest request) {
-    return ResponseEntity.ok().build();
+    return financeTrackerService.createTableRelationship(request);
   }
 
   @GetMapping("records")

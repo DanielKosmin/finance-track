@@ -22,6 +22,7 @@ public class TransactionMappingRequest {
   private String transactionEndDate;
 
   @NotBlank(message = "Transaction Description must contain keywords for table search")
+  @Pattern(regexp = "^%.*%$", message = "Transaction Description must be wrapped in '%'")
   private String transactionDescription;
 
   @NotBlank(message = "Transaction Type must not be empty")
