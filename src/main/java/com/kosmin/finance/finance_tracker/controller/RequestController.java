@@ -4,6 +4,7 @@ import com.kosmin.finance.finance_tracker.model.Response;
 import com.kosmin.finance.finance_tracker.model.TransactionMappingRequest;
 import com.kosmin.finance.finance_tracker.service.FinanceTrackerService;
 import jakarta.validation.Valid;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -24,7 +25,8 @@ public class RequestController {
   }
 
   @PostMapping("insert")
-  public ResponseEntity<String> insertRecords(@RequestParam("file") MultipartFile file) {
+  public ResponseEntity<Response> insertRecords(@RequestParam("file") MultipartFile file)
+      throws IOException {
 
     return financeTrackerService.insertRecords(file);
   }
