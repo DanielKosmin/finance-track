@@ -5,7 +5,9 @@ import com.kosmin.finance.finance_tracker.model.TransactionMappingRequest;
 import com.kosmin.finance.finance_tracker.service.FinanceTrackerService;
 import jakarta.validation.Valid;
 import java.io.IOException;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -45,8 +47,10 @@ public class RequestController {
 
   @GetMapping()
   public ResponseEntity<Response> getForeignKeyRelationship(
-      @RequestParam String startDate, @RequestParam String endDate) {
+      @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+      @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
 
-    return financeTrackerService.getForeignKeyRelationship(startDate, endDate);
+    return financeTrackerService.getForeignKeyRelationship(
+        startDate.toString(), endDate.toString());
   }
 }
