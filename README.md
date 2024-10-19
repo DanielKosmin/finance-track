@@ -35,8 +35,8 @@ created in step 1.
       information, reference it in the .http files, and you can start calling the APIs
     - Otherwise, just use the stubs to fill out any other API testing tool
 4) The API calls should be called in the following order:
-   - `http/create/create-tables.http`
-   - `http/insert/upload-csv.http`
+    - `http/create/create-tables.http`
+    - `http/insert/upload-csv.http`
 
 After those two API calls are completed, the tables are created and filled out and can be interacted in any way.
 
@@ -48,3 +48,15 @@ After those two API calls are completed, the tables are created and filled out a
 4) start the docker image `docker run -p 8080:8080 finance-tracker:latest`
 5) try interaction with the endpoints in the .http directory
 6) kill the local process and run `docker container prune` to clear any existing containers
+
+### Pulling from docker hub
+
+Images get published during any push to main via github actions
+
+1) kill the local process and run `docker container prune` to clear any existing containers
+2) create a .env file and add the following secrets
+   - SQL_DB_URL=<>
+   - USERNAME=<>
+   - PASSWORD=<>
+3) run
+   `docker run --platform linux/amd64 -it --name finance-tracker -p 8080:8080 --env-file .env dkosmin/finance-tracker:latest`
