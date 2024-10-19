@@ -63,5 +63,5 @@ jobs:
 
       - name: Push Docker image to Docker Hub
         run: |
-          docker tag finance-tracker:latest ${{ secrets.DOCKER_USERNAME }}/your-docker-image-name:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/your-docker-image-name:latest
+          docker tag finance-tracker:latest ${{ secrets.DOCKER_USERNAME }}/finance-tracker:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/finance-tracker:latest
