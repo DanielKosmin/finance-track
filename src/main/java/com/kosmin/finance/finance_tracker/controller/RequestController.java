@@ -37,9 +37,16 @@ public class RequestController {
     return financeTrackerService.createTableRelationship(request);
   }
 
-  @GetMapping("records")
-  public ResponseEntity<Response> getAllFinancialRecords() {
+  @GetMapping("banking")
+  public ResponseEntity<Response> getBankingTable() {
 
-    return financeTrackerService.getAllFinancialRecords();
+    return financeTrackerService.getBankingTable();
+  }
+
+  @GetMapping()
+  public ResponseEntity<Response> getForeignKeyRelationship(
+      @RequestParam String startDate, @RequestParam String endDate) {
+
+    return financeTrackerService.getForeignKeyRelationship(startDate, endDate);
   }
 }

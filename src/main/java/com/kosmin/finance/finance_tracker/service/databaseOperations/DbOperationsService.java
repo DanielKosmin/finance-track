@@ -13,7 +13,9 @@ public interface DbOperationsService {
 
   void insertCreditInformation(CreditCardRecordsModel creditCardRecordsModel);
 
-  Response getAllFinancialRecords();
+  Response getBankingTable();
 
   Response createTableRelationship(TransactionMappingRequest transactionMappingRequest);
+
+  Response getForeignKeyRelationship(String startDate, String endDate);
 }

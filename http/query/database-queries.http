@@ -1,0 +1,5 @@
+### GET all records from banking table
+GET {{FINANCE_TRACKER_BASE_URL}}/expenses/v1/banking
+
+### GET transactions contributed for a months credit card payment amount
+GET {{FINANCE_TRACKER_BASE_URL}}/expenses/v1?startDate=2024-09-01&endDate=2024-09-30

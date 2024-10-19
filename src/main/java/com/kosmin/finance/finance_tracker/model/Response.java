@@ -14,7 +14,9 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Response {
   private String status;
+  private int numberOfRecords;
   private List<FinancialRecordsEntity> records;
+  private List<ForeignKeyEntity> foreignKeyEntities;
   private String errorMessage;
   private String message;
 }

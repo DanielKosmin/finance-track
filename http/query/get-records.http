@@ -1,3 +1,0 @@
-### GET get all financial records
-GET {{FINANCE_TRACKER_BASE_URL}}/expenses/v1/records
-Content-Type: application/json

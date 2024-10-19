@@ -19,11 +19,15 @@ public class QueryTableRecords {
   private final NamedParameterJdbcTemplate jdbcTemplate;
   private final SqlQueriesConfig sqlQueriesConfig;
 
-  public Response getAllFinancialRecords() {
+  public Response getBankingTable() {
     List<FinancialRecordsEntity> entities =
         jdbcTemplate.query(sqlQueriesConfig.getMap().get("get-banking-record"), this::mapRows);
     if (entities.isEmpty()) throw new RuntimeException("No banking Records found");
-    return Response.builder().status(Status.SUCCESS.getValue()).records(entities).build();
+    return Response.builder()
+        .status(Status.SUCCESS.getValue())
+        .numberOfRecords(entities.size())
+        .records(entities)
+        .build();
   }
 
   private FinancialRecordsEntity mapRows(ResultSet rs, int rowNum) throws SQLException {

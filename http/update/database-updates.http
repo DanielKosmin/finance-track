@@ -1,0 +1,10 @@
+### PUT upload file
+PUT {{FINANCE_TRACKER_BASE_URL}}/expenses/v1/map_relationship
+Content-Type: application/json
+
+{
+  "transactionStartDate": "2024-09-01",
+  "transactionEndDate": "2024-09-30",
+  "transactionDescription": "%chase%",
+  "transactionType": "Sale"
+}

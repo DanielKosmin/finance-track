@@ -68,7 +68,12 @@ public class FinanceTrackerService {
         .body(dbOperationsService.createTableRelationship(request));
   }
 
-  public ResponseEntity<Response> getAllFinancialRecords() {
-    return ResponseEntity.ok().body(dbOperationsService.getAllFinancialRecords());
+  public ResponseEntity<Response> getBankingTable() {
+    return ResponseEntity.ok().body(dbOperationsService.getBankingTable());
+  }
+
+  public ResponseEntity<Response> getForeignKeyRelationship(String startDate, String endDate) {
+    return ResponseEntity.ok()
+        .body(dbOperationsService.getForeignKeyRelationship(startDate, endDate));
   }
 }

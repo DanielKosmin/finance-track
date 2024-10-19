@@ -2,6 +2,7 @@ package com.kosmin.finance.finance_tracker.service.databaseOperations;
 
 import com.kosmin.finance.finance_tracker.domain.create.CreateTables;
 import com.kosmin.finance.finance_tracker.domain.insert.InsertTableRecords;
+import com.kosmin.finance.finance_tracker.domain.query.QueryForeignKeyRelationship;
 import com.kosmin.finance.finance_tracker.domain.query.QueryTableRecords;
 import com.kosmin.finance.finance_tracker.domain.update.UpdateForeignKey;
 import com.kosmin.finance.finance_tracker.model.BankingAccountModel;
@@ -19,6 +20,7 @@ public class DbOperationsServiceImpl implements DbOperationsService {
   private final UpdateForeignKey updateForeignKey;
   private final QueryTableRecords queryTableRecords;
   private final CreateTables createTables;
+  private final QueryForeignKeyRelationship queryForeignKeyRelationship;
 
   @Override
   public void createTables() {
@@ -36,12 +38,17 @@ public class DbOperationsServiceImpl implements DbOperationsService {
   }
 
   @Override
-  public Response getAllFinancialRecords() {
-    return queryTableRecords.getAllFinancialRecords();
+  public Response getBankingTable() {
+    return queryTableRecords.getBankingTable();
   }
 
   @Override
   public Response createTableRelationship(TransactionMappingRequest transactionMappingRequest) {
     return updateForeignKey.createTableRelationship(transactionMappingRequest);
+  }
+
+  @Override
+  public Response getForeignKeyRelationship(String startDate, String endDate) {
+    return queryForeignKeyRelationship.getForeignKeyRelationship(startDate, endDate);
   }
 }
