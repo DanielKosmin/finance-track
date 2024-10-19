@@ -3,10 +3,11 @@ name: CI
 on:
   push:
     branches:
-      - main
+      - '*'
   pull_request:
     branches:
       - main
+      - dev
 
 jobs:
   unit_tests:
@@ -66,20 +67,23 @@ jobs:
     needs: build
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-
     steps:
-      - name: checkout code
-        uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-      - name: setup JDK
-        uses: actions/setup-java@v1
+      - name: Setup JDK
+        uses: actions/setup-java@v3
         with:
           java-version: '17'
+          distribution: 'temurin'
 
-      - name: build docker image
-        run: docker build -t finance-tracker:latest .
+      - name: Build Docker image
+        run: |
+          # Ensure you are in the correct context
+          ls build/libs  # This will list files to ensure the JAR is present
+          docker build -t finance-tracker:latest .  # Build the Docker image
 
-      - name: Log in to docker hub
+      - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Push Docker image to Docker Hub
