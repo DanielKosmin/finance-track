@@ -1,4 +1,4 @@
-package com.kosmin.finance.finance_tracker.service;
+package com.kosmin.finance.finance_tracker.service.asyncService;
 
 import com.kosmin.finance.finance_tracker.model.BankingAccountModel;
 import com.kosmin.finance.finance_tracker.model.CreditCardRecordsModel;

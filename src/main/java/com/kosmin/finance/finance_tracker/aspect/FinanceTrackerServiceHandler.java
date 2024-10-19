@@ -4,12 +4,13 @@ import com.kosmin.finance.finance_tracker.exception.ForeignKeyRelationshipNotFou
 import com.kosmin.finance.finance_tracker.exception.ParentTransactionNotFoundException;
 import com.kosmin.finance.finance_tracker.model.Response;
 import com.kosmin.finance.finance_tracker.model.Status;
+import com.kosmin.finance.finance_tracker.service.responseBuilder.ResponseBuilderService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,10 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class FinanceTrackerServiceHandler {
+
+  private final ResponseBuilderService responseBuilderService;
 
   @Around("execution(* com.kosmin.finance.finance_tracker.service.FinanceTrackerService.*(..))")
   public Object handleServiceMethod(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -29,74 +33,60 @@ public class FinanceTrackerServiceHandler {
   }
 
   private ResponseEntity<Response> handleException(String methodName, Exception e) {
+    Response response = Response.builder().status(Status.FAILED.getValue()).build();
     log.error("Exception in method: {} - {}", methodName, e.getMessage());
 
-    // Map specific methods to their custom handlers
     return switch (methodName) {
-      case "createTables" -> handleCreateTablesException(e);
-      case "insertRecords" -> handleInsertRecordsException(e);
-      case "createTableRelationship" -> handleTableRelationshipException(e);
-      case "getAllFinancialRecords" -> handleNotFoundException(e);
-      case "getForeignKeyRelationship" -> handleForeignKeyRelationshipException(e);
-      default -> handleGeneralException(methodName, e);
+      case "createTables" -> handleCreateTablesException(e, response);
+      case "insertRecords" -> handleInsertRecordsException(e, response);
+      case "createTableRelationship" -> handleTableRelationshipException(e, response);
+      case "getAllFinancialRecords" -> handleAllRecords(e, response);
+      case "getForeignKeyRelationship" -> handleForeignKeyRelationshipException(e, response);
+      default -> handleGeneralException(methodName, e, response);
     };
   }
 
-  private ResponseEntity<Response> handleCreateTablesException(Exception e) {
+  private ResponseEntity<Response> handleCreateTablesException(Exception e, Response response) {
     if (e instanceof BadSqlGrammarException) {
-      return buildBadRequestResponse("Unable to create tables, tables already exist");
+      return responseBuilderService.buildBadRequestResponse(
+          "Unable to create tables, tables already exist", response);
     }
-    return buildInternalErrorResponse(e.getMessage());
+    return responseBuilderService.buildInternalErrorResponse(e.getMessage(), response);
   }
 
-  private ResponseEntity<Response> handleInsertRecordsException(Exception e) {
+  private ResponseEntity<Response> handleInsertRecordsException(Exception e, Response response) {
     if (e instanceof RuntimeException) {
-      return buildBadRequestResponse(e.getMessage());
+      return responseBuilderService.buildBadRequestResponse(e.getMessage(), response);
     }
-    return buildInternalErrorResponse(e.getMessage());
+    return responseBuilderService.buildInternalErrorResponse(e.getMessage(), response);
   }
 
-  private ResponseEntity<Response> handleTableRelationshipException(Exception e) {
+  private ResponseEntity<Response> handleTableRelationshipException(
+      Exception e, Response response) {
     if (e instanceof EmptyResultDataAccessException
         || e instanceof ParentTransactionNotFoundException) {
-      return buildBadRequestResponse("No parent request id found for filtered search");
+      return responseBuilderService.buildBadRequestResponse(
+          "No parent request id found for filtered search", response);
     }
-    return buildInternalErrorResponse(e.getMessage());
+    return responseBuilderService.buildInternalErrorResponse(e.getMessage(), response);
   }
 
-  private ResponseEntity<Response> handleNotFoundException(Exception e) {
-    return ResponseEntity.status(HttpStatus.NOT_FOUND)
-        .body(
-            Response.builder()
-                .status(Status.FAILED.getValue())
-                .errorMessage(e.getMessage())
-                .build());
+  private ResponseEntity<Response> handleAllRecords(Exception e, Response response) {
+    return responseBuilderService.buildNotFoundResponse(e.getMessage(), response);
   }
 
-  private ResponseEntity<Response> handleForeignKeyRelationshipException(Exception e) {
+  private ResponseEntity<Response> handleForeignKeyRelationshipException(
+      Exception e, Response response) {
     if (e instanceof ForeignKeyRelationshipNotFoundException) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND)
-          .body(
-              Response.builder()
-                  .status(Status.FAILED.getValue())
-                  .errorMessage(e.getMessage())
-                  .build());
+      return responseBuilderService.buildNotFoundResponse(e.getMessage(), response);
     }
-    return buildInternalErrorResponse(e.getMessage());
+    return responseBuilderService.buildInternalErrorResponse(e.getMessage(), response);
   }
 
-  private ResponseEntity<Response> handleGeneralException(String methodName, Exception e) {
-    return buildInternalErrorResponse(
-        String.format("Unhandled exception in method: %s :: %s", methodName, e.getMessage()));
-  }
-
-  private ResponseEntity<Response> buildBadRequestResponse(String message) {
-    return ResponseEntity.badRequest()
-        .body(Response.builder().status(Status.FAILED.getValue()).errorMessage(message).build());
-  }
-
-  private ResponseEntity<Response> buildInternalErrorResponse(String message) {
-    return ResponseEntity.internalServerError()
-        .body(Response.builder().status(Status.FAILED.getValue()).errorMessage(message).build());
+  private ResponseEntity<Response> handleGeneralException(
+      String methodName, Exception e, Response response) {
+    return responseBuilderService.buildInternalErrorResponse(
+        String.format("Unhandled exception in method: %s :: %s", methodName, e.getMessage()),
+        response);
   }
 }
