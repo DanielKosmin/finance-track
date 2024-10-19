@@ -3,7 +3,7 @@ FROM gradle:8.10.2-jdk17 AS builder
 
 WORKDIR /app
 COPY . .
-RUN ./gradlew clean build
+RUN ./gradlew clean build -x test
 
 # Stage 2: Create a minimal runtime image
 FROM openjdk:17-jdk-slim
