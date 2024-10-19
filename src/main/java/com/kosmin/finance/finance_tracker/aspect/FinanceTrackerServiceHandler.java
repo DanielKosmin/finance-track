@@ -40,7 +40,7 @@ public class FinanceTrackerServiceHandler {
       case "createTables" -> handleCreateTablesException(e, response);
       case "insertRecords" -> handleInsertRecordsException(e, response);
       case "createTableRelationship" -> handleTableRelationshipException(e, response);
-      case "getAllFinancialRecords" -> handleAllRecords(e, response);
+      case "getAllBankingRecords" -> handleAllRecords(e, response);
       case "getForeignKeyRelationship" -> handleForeignKeyRelationshipException(e, response);
       default -> handleGeneralException(methodName, e, response);
     };

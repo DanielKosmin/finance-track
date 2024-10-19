@@ -42,7 +42,7 @@ public class RequestController {
   @GetMapping("banking")
   public ResponseEntity<Response> getBankingTable() {
 
-    return financeTrackerService.getBankingTable();
+    return financeTrackerService.getAllBankingRecords();
   }
 
   @GetMapping()

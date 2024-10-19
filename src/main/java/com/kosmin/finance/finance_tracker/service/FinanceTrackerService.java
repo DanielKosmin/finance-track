@@ -69,7 +69,7 @@ public class FinanceTrackerService {
         .body(dbOperationsService.createTableRelationship(request));
   }
 
-  public ResponseEntity<Response> getBankingTable() {
+  public ResponseEntity<Response> getAllBankingRecords() {
     return ResponseEntity.ok().body(dbOperationsService.getBankingTable());
   }
 

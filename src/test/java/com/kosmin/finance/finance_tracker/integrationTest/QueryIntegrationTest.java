@@ -1,5 +1,7 @@
 package com.kosmin.finance.finance_tracker.integrationTest;
 
+import com.kosmin.finance.finance_tracker.model.BankingAccountModel;
+import com.kosmin.finance.finance_tracker.model.FinancialRecordsEntity;
 import com.kosmin.finance.finance_tracker.model.Response;
 import com.kosmin.finance.finance_tracker.model.Status;
 import java.util.Optional;
@@ -13,23 +15,34 @@ public class QueryIntegrationTest extends BaseIntegrationTest {
   @Test
   @DisplayName("Get all checking table records")
   void testGetAllTableRecords() {
-    webTestClient
-        .get()
-        .uri("/expenses/v1/banking")
-        .exchange()
-        .expectStatus()
-        .isOk()
-        .expectBody(Response.class)
-        .consumeWith(
-            responseEntityExchangeResult ->
-                Assertions.assertEquals(
-                    Optional.ofNullable(responseEntityExchangeResult)
-                        .map(EntityExchangeResult::getResponseBody)
-                        .map(Response::getStatus)
-                        .orElse(Status.FAILED.getValue()),
-                    Status.SUCCESS.getValue()))
-        .returnResult()
-        .getResponseBody();
+    var res =
+        webTestClient
+            .get()
+            .uri("/expenses/v1/banking")
+            .exchange()
+            .expectStatus()
+            .isOk()
+            .expectBody(Response.class)
+            .consumeWith(
+                responseEntityExchangeResult ->
+                    Assertions.assertEquals(
+                        Optional.ofNullable(responseEntityExchangeResult)
+                            .map(EntityExchangeResult::getResponseBody)
+                            .map(Response::getStatus)
+                            .orElse(Status.FAILED.getValue()),
+                        Status.SUCCESS.getValue()))
+            .returnResult()
+            .getResponseBody();
+    FinancialRecordsEntity financialRecordsEntity =
+        Optional.ofNullable(res)
+            .map(Response::getRecords)
+            .flatMap(records -> records.stream().findFirst())
+            .orElse(null);
+    BankingAccountModel bankingAccountModel =
+        objectMapper.convertValue(financialRecordsEntity, BankingAccountModel.class);
+    // set incorrect date format since class auto changes date format to the correct one
+    bankingAccountModel.setTransactionDate("10/01/24");
+    Assertions.assertEquals(testBankingAccountModel, bankingAccountModel);
   }
 
   @Test
