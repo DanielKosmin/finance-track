@@ -30,7 +30,8 @@ public class QueryForeignKeyRelationship {
         namedParameterJdbcTemplate.query(
             sqlQueriesConfig.getMap().get("get-foreign-key-relationship"), params, this::mapRows);
     if (entities.isEmpty())
-      throw new ForeignKeyRelationshipNotFoundException("No foreign key relationship found");
+      throw new ForeignKeyRelationshipNotFoundException(
+          "No foreign key relationship found for date range", startDate, endDate);
     return Response.builder()
         .status(Status.SUCCESS.getValue())
         .numberOfRecords(entities.size())

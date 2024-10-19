@@ -1,5 +1,6 @@
 package com.kosmin.finance.finance_tracker.aspect;
 
+import com.kosmin.finance.finance_tracker.exception.ForeignKeyRelationshipNotFoundException;
 import com.kosmin.finance.finance_tracker.exception.ParentTransactionNotFoundException;
 import com.kosmin.finance.finance_tracker.model.Response;
 import com.kosmin.finance.finance_tracker.model.Status;
@@ -88,6 +89,23 @@ public class FinanceTrackerServiceHandler {
                 Response.builder()
                     .status(Status.FAILED.getValue())
                     .errorMessage(e.getMessage())
+                    .build());
+      }
+      case "getForeignKeyRelationship" -> {
+        log.error(e.getMessage());
+        if (e instanceof ForeignKeyRelationshipNotFoundException) {
+          return ResponseEntity.status(HttpStatus.NOT_FOUND)
+              .body(
+                  Response.builder()
+                      .status(Status.FAILED.getValue())
+                      .errorMessage(e.getMessage())
+                      .build());
+        }
+        return ResponseEntity.internalServerError()
+            .body(
+                Response.builder()
+                    .status(Status.FAILED.getValue())
+                    .errorMessage("An error occurred: " + e.getMessage())
                     .build());
       }
       default -> {
