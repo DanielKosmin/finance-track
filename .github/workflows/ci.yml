@@ -24,7 +24,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Run Unit Tests
-        run: ./gradlew unitTest
+        run: ./gradlew clean unitTest
 
   integration_tests:
     if: github.event_name == 'pull_request'
@@ -53,7 +53,7 @@ jobs:
       - name: Build with Gradle
         env:
           SPRING_PROFILE: test
-        run: ./gradlew test
+        run: ./gradlew clean test
 
       - name: Tear Down Docker Compose
         run: docker-compose down

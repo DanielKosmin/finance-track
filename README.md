@@ -27,7 +27,7 @@ created in step 1.
 1) Run `./gradlew clean build`
 2) Few options depending on how you're editing the project
     - If running in Intellij or likely other IDEs, navigate to `FinanceTrackerApplication.java` and run the file which
-      will sping up SpringBoot
+      will spin up SpringBoot
     - Run `./gradlew bootRun` in any terminal within the projects directory
 3) Navigate to the `.http` directory
     - If using IntelliJ Ultimate, it provides support to make http calls. Navigate to any of the .http files, click the
@@ -51,7 +51,7 @@ After those two API calls are completed, the tables are created and filled out a
 
 ### Pulling from docker hub
 
-Images get published during any push to main via github actions
+Images get published during any push to main via GitHub actions
 
 1) kill the local process and run `docker container prune` to clear any existing containers
 2) create a .env file and add the following secrets
