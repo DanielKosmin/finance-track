@@ -24,74 +24,79 @@ public class FinanceTrackerServiceHandler {
     try {
       return joinPoint.proceed();
     } catch (Exception e) {
-      return handleException(
-          joinPoint.getSignature().getName(),
-          e,
-          Response.builder().status(Status.FAILED.getValue()).build());
+      return handleException(joinPoint.getSignature().getName(), e);
     }
   }
 
-  private ResponseEntity<Response> handleException(
-      String methodName, Exception e, Response response) {
-    switch (methodName) {
-      case "createTables" -> {
-        log.error(e.getMessage());
-        if (e instanceof BadSqlGrammarException) {
-          return ResponseEntity.badRequest()
-              .body(
-                  response.toBuilder()
-                      .errorMessage("Unable to create tables, tables already exist")
-                      .build());
-        }
-        return ResponseEntity.internalServerError()
-            .body(response.toBuilder().errorMessage(e.getMessage()).build());
-      }
-      case "insertRecords" -> {
-        log.error(e.getMessage());
-        if (e instanceof RuntimeException) {
-          return ResponseEntity.badRequest()
-              .body(response.toBuilder().errorMessage(e.getMessage()).build());
-        }
-        return ResponseEntity.internalServerError()
-            .body(response.toBuilder().errorMessage(e.getMessage()).build());
-      }
-      case "createTableRelationship" -> {
-        log.error(e.getMessage());
-        if (e instanceof EmptyResultDataAccessException
-            || e instanceof ParentTransactionNotFoundException) {
-          return ResponseEntity.badRequest()
-              .body(
-                  response.toBuilder()
-                      .errorMessage("No parent request id found for filtered search")
-                      .build());
-        }
-        return ResponseEntity.internalServerError()
-            .body(response.toBuilder().errorMessage(e.getMessage()).build());
-      }
-      case "getAllFinancialRecords" -> {
-        log.error(e.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(response.toBuilder().errorMessage(e.getMessage()).build());
-      }
-      case "getForeignKeyRelationship" -> {
-        log.error(e.getMessage());
-        if (e instanceof ForeignKeyRelationshipNotFoundException) {
-          return ResponseEntity.status(HttpStatus.NOT_FOUND)
-              .body(response.toBuilder().errorMessage(e.getMessage()).build());
-        }
-        return ResponseEntity.internalServerError()
-            .body(response.toBuilder().errorMessage(e.getMessage()).build());
-      }
-      default -> {
-        log.error("Unhandled exception in method: {}", methodName);
-        return ResponseEntity.internalServerError()
-            .body(
-                response.toBuilder()
-                    .errorMessage(
-                        String.format(
-                            "Unhandled exception in method: %s :: %s", methodName, e.getMessage()))
-                    .build());
-      }
+  private ResponseEntity<Response> handleException(String methodName, Exception e) {
+    log.error("Exception in method: {} - {}", methodName, e.getMessage());
+
+    // Map specific methods to their custom handlers
+    return switch (methodName) {
+      case "createTables" -> handleCreateTablesException(e);
+      case "insertRecords" -> handleInsertRecordsException(e);
+      case "createTableRelationship" -> handleTableRelationshipException(e);
+      case "getAllFinancialRecords" -> handleNotFoundException(e);
+      case "getForeignKeyRelationship" -> handleForeignKeyRelationshipException(e);
+      default -> handleGeneralException(methodName, e);
+    };
+  }
+
+  private ResponseEntity<Response> handleCreateTablesException(Exception e) {
+    if (e instanceof BadSqlGrammarException) {
+      return buildBadRequestResponse("Unable to create tables, tables already exist");
     }
+    return buildInternalErrorResponse(e.getMessage());
+  }
+
+  private ResponseEntity<Response> handleInsertRecordsException(Exception e) {
+    if (e instanceof RuntimeException) {
+      return buildBadRequestResponse(e.getMessage());
+    }
+    return buildInternalErrorResponse(e.getMessage());
+  }
+
+  private ResponseEntity<Response> handleTableRelationshipException(Exception e) {
+    if (e instanceof EmptyResultDataAccessException
+        || e instanceof ParentTransactionNotFoundException) {
+      return buildBadRequestResponse("No parent request id found for filtered search");
+    }
+    return buildInternalErrorResponse(e.getMessage());
+  }
+
+  private ResponseEntity<Response> handleNotFoundException(Exception e) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(
+            Response.builder()
+                .status(Status.FAILED.getValue())
+                .errorMessage(e.getMessage())
+                .build());
+  }
+
+  private ResponseEntity<Response> handleForeignKeyRelationshipException(Exception e) {
+    if (e instanceof ForeignKeyRelationshipNotFoundException) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND)
+          .body(
+              Response.builder()
+                  .status(Status.FAILED.getValue())
+                  .errorMessage(e.getMessage())
+                  .build());
+    }
+    return buildInternalErrorResponse(e.getMessage());
+  }
+
+  private ResponseEntity<Response> handleGeneralException(String methodName, Exception e) {
+    return buildInternalErrorResponse(
+        String.format("Unhandled exception in method: %s :: %s", methodName, e.getMessage()));
+  }
+
+  private ResponseEntity<Response> buildBadRequestResponse(String message) {
+    return ResponseEntity.badRequest()
+        .body(Response.builder().status(Status.FAILED.getValue()).errorMessage(message).build());
+  }
+
+  private ResponseEntity<Response> buildInternalErrorResponse(String message) {
+    return ResponseEntity.internalServerError()
+        .body(Response.builder().status(Status.FAILED.getValue()).errorMessage(message).build());
   }
 }
