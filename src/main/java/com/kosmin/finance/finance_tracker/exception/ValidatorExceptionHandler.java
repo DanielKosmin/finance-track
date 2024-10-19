@@ -24,6 +24,7 @@ public class ValidatorExceptionHandler {
     return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
   }
 
+  // Exception thrown when request body is empty
   @ExceptionHandler(HttpMessageNotReadableException.class)
   public ResponseEntity<Response> handleInvalidJson(HttpMessageNotReadableException ex) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
