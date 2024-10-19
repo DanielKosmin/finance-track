@@ -4,12 +4,14 @@ import com.kosmin.finance.finance_tracker.model.Response;
 import com.kosmin.finance.finance_tracker.model.Status;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 
 public class QueryIntegrationTest extends BaseIntegrationTest {
 
   @Test
+  @DisplayName("Get all checking table records")
   void testGetAllTableRecords() {
     webTestClient
         .get()
@@ -31,6 +33,7 @@ public class QueryIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  @DisplayName("get all foreign key relationship results, only Inner Join")
   void testGetForeignKeyRelationshipNoResults() {
     String startDate = "2024-01-01";
     String endDate = "2024-01-31";
