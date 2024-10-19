@@ -35,7 +35,7 @@ created in step 1.
       information, reference it in the .http files, and you can start calling the APIs
     - Otherwise, just use the stubs to fill out any other API testing tool
 4) The API calls should be called in the following order:
-   - `create-tables.http`
-   - `upload-csv.http`
+   - `http/create/create-tables.http`
+   - `http/insert/upload-csv.http`
 
 After those two API calls are completed, the tables are created and filled out and can be interacted in any way. 

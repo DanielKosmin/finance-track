@@ -1,69 +1,69 @@
 buildscript {
-	repositories {
-		mavenCentral()
-	}
+  repositories {
+    mavenCentral()
+  }
 }
 
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.3.4'
-	id 'io.spring.dependency-management' version '1.1.6'
-	id 'com.diffplug.spotless' version '6.25.0'
+  id 'java'
+  id 'org.springframework.boot' version '3.3.4'
+  id 'io.spring.dependency-management' version '1.1.6'
+  id 'com.diffplug.spotless' version '6.25.0'
 }
 
 group = 'com.personal.tracker'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
 }
 
 repositories {
-	mavenCentral()
+  mavenCentral()
 }
 
 dependencies {
-	// spring dependencies
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	// lombok
-	implementation 'org.projectlombok:lombok:1.18.34'
-	annotationProcessor 'org.projectlombok:lombok:1.18.34'
-	// db dependencies
-	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-	implementation 'com.mysql:mysql-connector-j:9.0.0'
-	// csv processing
-	implementation 'com.opencsv:opencsv:5.9'
-	// jakarta validator
-	implementation 'jakarta.validation:jakarta.validation-api:3.1.0'
-	implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
-	implementation 'jakarta.el:jakarta.el-api:6.0.1'
-	// aspect
-	implementation 'org.springframework.boot:spring-boot-starter-aop'
-	implementation 'org.aspectj:aspectjweaver'
+  // spring dependencies
+  implementation 'org.springframework.boot:spring-boot-starter-web'
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+  // lombok
+  implementation 'org.projectlombok:lombok:1.18.34'
+  annotationProcessor 'org.projectlombok:lombok:1.18.34'
+  // db dependencies
+  implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+  implementation 'com.mysql:mysql-connector-j:9.0.0'
+  // csv processing
+  implementation 'com.opencsv:opencsv:5.9'
+  // jakarta validator
+  implementation 'jakarta.validation:jakarta.validation-api:3.1.0'
+  implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
+  implementation 'jakarta.el:jakarta.el-api:6.0.1'
+  // aspect
+  implementation 'org.springframework.boot:spring-boot-starter-aop'
+  implementation 'org.aspectj:aspectjweaver'
 }
 
 spotless {
-	java {
-		googleJavaFormat()
-	}
+  java {
+    googleJavaFormat()
+  }
 }
 
 copy {
-	from new File(rootProject.rootDir, 'scripts/pre-commit')
-	into new File(rootProject.rootDir, '.git/hooks')
-	fileMode 0777
+  from new File(rootProject.rootDir, 'scripts/pre-commit')
+  into new File(rootProject.rootDir, '.git/hooks')
+  fileMode 0777
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+  useJUnitPlatform()
 }
 
 tasks.register("unitTest", Test) {
-	useJUnitPlatform {
-		excludeTags "int"
-	}
+  useJUnitPlatform {
+    excludeTags "int"
+  }
 }
