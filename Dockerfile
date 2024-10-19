@@ -1,31 +1,15 @@
-# Use an official OpenJDK 17 runtime as a parent image
+# Stage 1: Build the application
+FROM gradle:8.10.2-jdk17 AS builder
+
+WORKDIR /app
+COPY . .
+RUN ./gradlew clean build -x unitTest -x integrationTest
+
+# Stage 2: Create a minimal runtime image
 FROM openjdk:17-jdk-slim
 
-# Set the working directory in the container
 WORKDIR /app
-
-# Copy the Gradle build files
-COPY build.gradle settings.gradle ./
-COPY gradle gradle/
-
-# Copy the source code
-COPY src ./src
-
-# Copy the Gradle Wrapper files
-COPY gradlew gradlew
-COPY gradle/wrapper/ gradle/wrapper/
-
-# Make the gradlew script executable
-RUN chmod +x gradlew
-
-# Build the application using the Gradle Wrapper
-RUN ./gradlew clean build
-
-# Log the contents of the build/libs/ directory
-RUN echo "Listing contents of build/libs/: " && ls build/libs/
-
-# Copy the built JAR file to the container
-COPY build/libs/finance_tracker-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/build/libs/finance_tracker-0.0.1-SNAPSHOT.jar app.jar
 
 # Run the JAR file
 ENTRYPOINT ["java", "-jar", "app.jar"]
