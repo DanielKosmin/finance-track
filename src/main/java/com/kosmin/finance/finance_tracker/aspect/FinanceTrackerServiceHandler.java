@@ -24,45 +24,36 @@ public class FinanceTrackerServiceHandler {
     try {
       return joinPoint.proceed();
     } catch (Exception e) {
-      return handleException(joinPoint.getSignature().getName(), e);
+      return handleException(
+          joinPoint.getSignature().getName(),
+          e,
+          Response.builder().status(Status.FAILED.getValue()).build());
     }
   }
 
-  private ResponseEntity<Response> handleException(String methodName, Exception e) {
+  private ResponseEntity<Response> handleException(
+      String methodName, Exception e, Response response) {
     switch (methodName) {
       case "createTables" -> {
         log.error(e.getMessage());
         if (e instanceof BadSqlGrammarException) {
           return ResponseEntity.badRequest()
               .body(
-                  Response.builder()
-                      .status(Status.FAILED.getValue())
+                  response.toBuilder()
                       .errorMessage("Unable to create tables, tables already exist")
                       .build());
         }
         return ResponseEntity.internalServerError()
-            .body(
-                Response.builder()
-                    .status(Status.FAILED.getValue())
-                    .errorMessage(e.getMessage())
-                    .build());
+            .body(response.toBuilder().errorMessage(e.getMessage()).build());
       }
       case "insertRecords" -> {
         log.error(e.getMessage());
         if (e instanceof RuntimeException) {
           return ResponseEntity.badRequest()
-              .body(
-                  Response.builder()
-                      .status(Status.FAILED.getValue())
-                      .errorMessage(e.getMessage())
-                      .build());
+              .body(response.toBuilder().errorMessage(e.getMessage()).build());
         }
         return ResponseEntity.internalServerError()
-            .body(
-                Response.builder()
-                    .status(Status.FAILED.getValue())
-                    .errorMessage(e.getMessage())
-                    .build());
+            .body(response.toBuilder().errorMessage(e.getMessage()).build());
       }
       case "createTableRelationship" -> {
         log.error(e.getMessage());
@@ -70,51 +61,35 @@ public class FinanceTrackerServiceHandler {
             || e instanceof ParentTransactionNotFoundException) {
           return ResponseEntity.badRequest()
               .body(
-                  Response.builder()
-                      .status(Status.FAILED.getValue())
+                  response.toBuilder()
                       .errorMessage("No parent request id found for filtered search")
                       .build());
         }
         return ResponseEntity.internalServerError()
-            .body(
-                Response.builder()
-                    .status(Status.FAILED.getValue())
-                    .errorMessage(e.getMessage())
-                    .build());
+            .body(response.toBuilder().errorMessage(e.getMessage()).build());
       }
       case "getAllFinancialRecords" -> {
         log.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(
-                Response.builder()
-                    .status(Status.FAILED.getValue())
-                    .errorMessage(e.getMessage())
-                    .build());
+            .body(response.toBuilder().errorMessage(e.getMessage()).build());
       }
       case "getForeignKeyRelationship" -> {
         log.error(e.getMessage());
         if (e instanceof ForeignKeyRelationshipNotFoundException) {
           return ResponseEntity.status(HttpStatus.NOT_FOUND)
-              .body(
-                  Response.builder()
-                      .status(Status.FAILED.getValue())
-                      .errorMessage(e.getMessage())
-                      .build());
+              .body(response.toBuilder().errorMessage(e.getMessage()).build());
         }
         return ResponseEntity.internalServerError()
-            .body(
-                Response.builder()
-                    .status(Status.FAILED.getValue())
-                    .errorMessage("An error occurred: " + e.getMessage())
-                    .build());
+            .body(response.toBuilder().errorMessage(e.getMessage()).build());
       }
       default -> {
         log.error("Unhandled exception in method: {}", methodName);
         return ResponseEntity.internalServerError()
             .body(
-                Response.builder()
-                    .status(Status.FAILED.getValue())
-                    .errorMessage("An error occurred: " + e.getMessage())
+                response.toBuilder()
+                    .errorMessage(
+                        String.format(
+                            "Unhandled exception in method: %s :: %s", methodName, e.getMessage()))
                     .build());
       }
     }
