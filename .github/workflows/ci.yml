@@ -9,7 +9,23 @@ on:
       - main
 
 jobs:
-  build:
+  unit_tests:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: '17'
+
+      - name: Run Unit Tests
+        run: ./gradlew unitTest
+
+  integration_tests:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
 
     steps:
@@ -22,4 +38,8 @@ jobs:
           java-version: '17'
 
       - name: Build with Gradle
-        run: ./gradlew build
+        env:
+          SQL_DB_URL: ${{ secrets.SQL_DB_URL }}
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+        run: ./gradlew test
