@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Copy the Gradle build files
 COPY build.gradle settings.gradle ./
-COPY gradle gradle
+COPY gradle gradle/
 
 # Copy the source code
 COPY src ./src
@@ -19,7 +19,10 @@ COPY gradle/wrapper/ gradle/wrapper/
 RUN chmod +x gradlew
 
 # Build the application using the Gradle Wrapper
-RUN ./gradlew build
+RUN ./gradlew clean build
+
+# Log the contents of the build/libs/ directory
+RUN echo "Listing contents of build/libs/: " && ls build/libs/
 
 # Copy the built JAR file to the container
 COPY build/libs/finance_tracker-0.0.1-SNAPSHOT.jar app.jar
