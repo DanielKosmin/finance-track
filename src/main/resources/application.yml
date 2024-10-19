@@ -2,7 +2,7 @@ spring:
   config:
     import: queries.yml
   profiles:
-    active: local
+    active: ${SPRING_PROFILE:local}
   datasource:
     url: ${SQL_DB_URL}
     username: ${USERNAME}

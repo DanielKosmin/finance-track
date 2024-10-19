@@ -40,12 +40,23 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
+      - name: Run Docker Compose
+        run: |
+          docker-compose up -d 
+          sleep 30
+
       - name: Build with Gradle
         env:
-          SQL_DB_URL: ${{ secrets.SQL_DB_URL }}
-          USERNAME: ${{ secrets.USERNAME }}
-          PASSWORD: ${{ secrets.PASSWORD }}
+          SPRING_PROFILE: test
         run: ./gradlew test
+
+      - name: Tear Down Docker Compose
+        run: docker-compose down
 
   docker_publish:
     needs: unit_tests

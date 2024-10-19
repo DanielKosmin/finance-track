@@ -60,3 +60,11 @@ Images get published during any push to main via github actions
    - PASSWORD=<>
 3) run
    `docker run --platform linux/amd64 -it --name finance-tracker -p 8080:8080 --env-file .env dkosmin/finance-tracker:latest`
+
+### Integration testing setup
+
+A test MySQL db docker image is used to run integration tests
+
+1) run `docker-compose up -d` to build the test MySQL DB
+2) run `./gradlew clean test` to run the integration tests
+3) run `docker-compose down` to tear down the test MySQL DB
