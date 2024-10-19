@@ -38,4 +38,13 @@ created in step 1.
    - `http/create/create-tables.http`
    - `http/insert/upload-csv.http`
 
-After those two API calls are completed, the tables are created and filled out and can be interacted in any way. 
+After those two API calls are completed, the tables are created and filled out and can be interacted in any way.
+
+### Running a local docker image
+
+1) start the docker daemon
+2) run `./gradlew clean build` to get the latest jar
+3) run `docker build -t finance-tracker:latest .`
+4) start the docker image `docker run -p 8080:8080 finance-tracker:latest`
+5) try interaction with the endpoints in the .http directory
+6) kill the local process and run `docker container prune` to clear any existing containers
