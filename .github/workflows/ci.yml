@@ -62,7 +62,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build without running tests
-        run: ./gradlew build -x test
+        run: ./gradlew build -x unitTest -x test
 
   build_pull:
     if: github.event_name == 'pull_request'
@@ -79,7 +79,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build without running tests
-        run: ./gradlew build -x test
+        run: ./gradlew build -x unitTest -x test
 
   docker_publish:
     needs: build_push
@@ -94,6 +94,13 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: Verify JAR file exists
+        run: |
+          if [ ! -f build/libs/finance_tracker-0.0.1-SNAPSHOT.jar ]; then
+            echo "JAR file not found!"
+            exit 1
+          fi
 
       - name: Build Docker image
         run: docker build -t finance-tracker:latest .
