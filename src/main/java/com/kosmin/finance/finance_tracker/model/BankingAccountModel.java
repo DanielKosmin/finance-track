@@ -3,7 +3,10 @@ package com.kosmin.finance.finance_tracker.model;
 import com.opencsv.bean.CsvBindByName;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor

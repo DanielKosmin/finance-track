@@ -1,7 +1,8 @@
 package com.kosmin.finance.finance_tracker.domain.insert;
 
 import com.kosmin.finance.finance_tracker.config.SqlQueriesConfig;
-import com.kosmin.finance.finance_tracker.model.*;
+import com.kosmin.finance.finance_tracker.model.BankingAccountModel;
+import com.kosmin.finance.finance_tracker.model.CreditCardRecordsModel;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,11 @@
 package com.kosmin.finance.finance_tracker.integrationTest;
 
-import com.kosmin.finance.finance_tracker.model.*;
+import com.kosmin.finance.finance_tracker.model.BankingAccountModel;
+import com.kosmin.finance.finance_tracker.model.CreditCardRecordsModel;
+import com.kosmin.finance.finance_tracker.model.FinancialRecordsEntity;
+import com.kosmin.finance.finance_tracker.model.ForeignKeyEntity;
+import com.kosmin.finance.finance_tracker.model.Response;
+import com.kosmin.finance.finance_tracker.model.TransactionMappingRequest;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
