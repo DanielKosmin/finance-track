@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - '*'
+      - main  # Trigger on pushes to the main branch
   pull_request:
     branches:
       - main  # Trigger on PRs targeting main
@@ -60,7 +60,7 @@ jobs:
         run: docker-compose down
 
   fast_forward_dev:
-    if: github.event_name == 'pull_request' && github.head_ref == 'dev' && github.base_ref == 'main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
@@ -83,7 +83,7 @@ jobs:
           git push origin dev || echo "Failed to push to dev branch"
 
   docker_publish:
-    if: github.event_name == 'pull_request' && github.head_ref == 'dev' && github.base_ref == 'main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
