@@ -34,7 +34,7 @@ public class QueryForeignKeyRelationshipTest {
 
   @BeforeEach
   void setUp() {
-    String query =
+    final String query =
         loadYamlProperties("queries.yml")
             .getProperty("queries.map." + GET_FOREIGN_KEY_RELATIONSHIP_KEY);
     map.put(GET_FOREIGN_KEY_RELATIONSHIP_KEY, query);
@@ -46,8 +46,8 @@ public class QueryForeignKeyRelationshipTest {
   @Test
   @DisplayName("Should throw exception when no foreign key relationship found")
   void getForeignKeyRelationshipEmptyResult() {
-    String startDate = "2024-10-01";
-    String endDate = "2024-10-31";
+    final String startDate = "2024-10-01";
+    final String endDate = "2024-10-31";
     Mockito.when(
             namedParameterJdbcTemplate.query(
                 Mockito.eq(sqlQueriesConfig.getMap().get(GET_FOREIGN_KEY_RELATIONSHIP_KEY)),
@@ -55,7 +55,7 @@ public class QueryForeignKeyRelationshipTest {
                 Mockito.<RowMapper<ForeignKeyEntity>>any()))
         .thenReturn(Collections.emptyList());
 
-    var thrownRes =
+    final var thrownRes =
         Assertions.assertThrows(
             ForeignKeyRelationshipNotFoundException.class,
             () -> queryForeignKeyRelationship.getForeignKeyRelationship(startDate, endDate));
@@ -70,7 +70,7 @@ public class QueryForeignKeyRelationshipTest {
   @Test
   @DisplayName("Should return foreign key relationship when found")
   void getForeignKeyRelationship() {
-    List<ForeignKeyEntity> entities =
+    final List<ForeignKeyEntity> entities =
         List.of(
             ForeignKeyEntity.builder()
                 .creditTransactionDate("")
@@ -80,8 +80,8 @@ public class QueryForeignKeyRelationshipTest {
                 .checkingTransactionAmount(1.0)
                 .checkingTransactionDate("")
                 .build());
-    String startDate = "2024-10-01";
-    String endDate = "2024-10-31";
+    final String startDate = "2024-10-01";
+    final String endDate = "2024-10-31";
     Mockito.when(
             namedParameterJdbcTemplate.query(
                 Mockito.eq(sqlQueriesConfig.getMap().get(GET_FOREIGN_KEY_RELATIONSHIP_KEY)),
@@ -89,7 +89,7 @@ public class QueryForeignKeyRelationshipTest {
                 Mockito.<RowMapper<ForeignKeyEntity>>any()))
         .thenReturn(entities);
 
-    var res = queryForeignKeyRelationship.getForeignKeyRelationship(startDate, endDate);
+    final var res = queryForeignKeyRelationship.getForeignKeyRelationship(startDate, endDate);
 
     Assertions.assertEquals(res.getStatus(), Status.SUCCESS.getValue());
     Assertions.assertEquals(res.getNumberOfRecords(), 1);
@@ -97,8 +97,8 @@ public class QueryForeignKeyRelationshipTest {
   }
 
   private Properties loadYamlProperties(String ymlFile) {
-    Resource resource = new ClassPathResource(ymlFile);
-    YamlPropertiesFactoryBean yamlPropertiesFactoryBean = new YamlPropertiesFactoryBean();
+    final Resource resource = new ClassPathResource(ymlFile);
+    final YamlPropertiesFactoryBean yamlPropertiesFactoryBean = new YamlPropertiesFactoryBean();
     yamlPropertiesFactoryBean.setResources(resource);
     return yamlPropertiesFactoryBean.getObject();
   }

@@ -21,6 +21,15 @@ for file in $stagedFiles; do
     fi
 done
 
+# Run Checkstyle
+echo "Running Checkstyle"
+./gradlew checkstyleMain checkstyleTest
+CHECKSTYLE_RESULT=$?
+if [ $CHECKSTYLE_RESULT -ne 0 ]; then
+    echo "Checkstyle checks failed."
+    exit 1
+fi
+
 # Run Unit Tests
 echo "Running Unit Tests"
 ./gradlew unitTest

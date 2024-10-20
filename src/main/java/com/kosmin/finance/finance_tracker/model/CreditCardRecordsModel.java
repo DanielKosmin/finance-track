@@ -41,8 +41,8 @@ public class CreditCardRecordsModel {
   }
 
   private String formattedDate(String transactionDate) {
-    SimpleDateFormat inputFormat = new SimpleDateFormat("MM/dd/yyyy");
-    SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+    final SimpleDateFormat inputFormat = new SimpleDateFormat("MM/dd/yyyy");
+    final SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
     try {
       return outputFormat.format(inputFormat.parse(transactionDate));
     } catch (ParseException e) {

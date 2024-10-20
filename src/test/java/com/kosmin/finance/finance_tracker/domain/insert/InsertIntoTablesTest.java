@@ -31,9 +31,9 @@ public class InsertIntoTablesTest {
 
   @BeforeEach
   void setUp() {
-    String bankingQuery =
+    final String bankingQuery =
         loadYamlProperties("queries.yml").getProperty("queries.map." + INSERT_INTO_BANKING_TABLE);
-    String creditQuery =
+    final String creditQuery =
         loadYamlProperties("queries.yml").getProperty("queries.map." + INSERT_INTO_CREDIT_TABLE);
     map.put(INSERT_INTO_BANKING_TABLE, bankingQuery);
     map.put(INSERT_INTO_CREDIT_TABLE, creditQuery);
@@ -71,8 +71,8 @@ public class InsertIntoTablesTest {
   }
 
   private Properties loadYamlProperties(String ymlFile) {
-    Resource resource = new ClassPathResource(ymlFile);
-    YamlPropertiesFactoryBean yamlPropertiesFactoryBean = new YamlPropertiesFactoryBean();
+    final Resource resource = new ClassPathResource(ymlFile);
+    final YamlPropertiesFactoryBean yamlPropertiesFactoryBean = new YamlPropertiesFactoryBean();
     yamlPropertiesFactoryBean.setResources(resource);
     return yamlPropertiesFactoryBean.getObject();
   }

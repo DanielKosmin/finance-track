@@ -32,7 +32,7 @@ public class UpdateForeignKeyMappingTest {
 
   @BeforeEach
   void setUp() {
-    String updateForeignKey =
+    final String updateForeignKey =
         loadYamlProperties("queries.yml").getProperty("queries.map." + UPDATE_FOREIGN_KEY);
     map.put(UPDATE_FOREIGN_KEY, updateForeignKey);
     Mockito.when(sqlQueriesConfig.getMap()).thenReturn(map);
@@ -43,7 +43,7 @@ public class UpdateForeignKeyMappingTest {
   @Test
   @DisplayName("create foreign key relationship")
   void updateForeignKey() {
-    TransactionMappingRequest transactionMappingRequest =
+    final TransactionMappingRequest transactionMappingRequest =
         TransactionMappingRequest.builder()
             .transactionStartDate("2024-10-01")
             .transactionEndDate("2024-10-31")
@@ -61,7 +61,7 @@ public class UpdateForeignKeyMappingTest {
                     "type", transactionMappingRequest.getTransactionType())))
         .thenReturn(1);
 
-    var res = update.createTableRelationship(transactionMappingRequest);
+    final var res = update.createTableRelationship(transactionMappingRequest);
     Assertions.assertEquals(
         res,
         Response.builder()
@@ -71,8 +71,8 @@ public class UpdateForeignKeyMappingTest {
   }
 
   private Properties loadYamlProperties(String ymlFile) {
-    Resource resource = new ClassPathResource(ymlFile);
-    YamlPropertiesFactoryBean yamlPropertiesFactoryBean = new YamlPropertiesFactoryBean();
+    final Resource resource = new ClassPathResource(ymlFile);
+    final YamlPropertiesFactoryBean yamlPropertiesFactoryBean = new YamlPropertiesFactoryBean();
     yamlPropertiesFactoryBean.setResources(resource);
     return yamlPropertiesFactoryBean.getObject();
   }

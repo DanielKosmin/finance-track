@@ -51,13 +51,13 @@ public class QueryIntegrationTest extends BaseIntegrationTest {
   @Test
   @DisplayName("Get all checking table records")
   void testGetAllTableRecords() {
-    var res = makeGetCall("/expenses/v1/banking", HttpStatus.OK);
-    FinancialRecordsEntity financialRecordsEntity =
+    final var res = makeGetCall("/expenses/v1/banking", HttpStatus.OK);
+    final FinancialRecordsEntity financialRecordsEntity =
         Optional.ofNullable(res)
             .map(Response::getRecords)
             .flatMap(records -> records.stream().findFirst())
             .orElse(null);
-    BankingAccountModel bankingAccountModel =
+    final BankingAccountModel bankingAccountModel =
         objectMapper.convertValue(financialRecordsEntity, BankingAccountModel.class);
     // set incorrect date format since class auto changes date format to the correct one
     bankingAccountModel.setTransactionDate("10/01/24");
@@ -67,9 +67,9 @@ public class QueryIntegrationTest extends BaseIntegrationTest {
   @Test
   @DisplayName("get all foreign key relationship results, only Inner Join, no results found")
   void testGetForeignKeyRelationshipNoResults() {
-    String startDate = "2024-01-01";
-    String endDate = "2024-01-31";
-    Response res =
+    final String startDate = "2024-01-01";
+    final String endDate = "2024-01-31";
+    final Response res =
         makeGetCall(
             String.format("/expenses/v1?startDate=%s&endDate=%s", startDate, endDate),
             HttpStatus.NOT_FOUND);
@@ -84,9 +84,9 @@ public class QueryIntegrationTest extends BaseIntegrationTest {
   @Test
   @DisplayName("get all foreign key relationship results, test when incorrect params are given")
   void testGetForeignKeyRelationshipIncorrectParams() {
-    String startDate = "2024-01";
-    String endDate = "2024-01";
-    Response res =
+    final String startDate = "2024-01";
+    final String endDate = "2024-01";
+    final Response res =
         makeGetCall(
             String.format("/expenses/v1?startDate=%s&endDate=%s", startDate, endDate),
             HttpStatus.BAD_REQUEST);
@@ -98,7 +98,7 @@ public class QueryIntegrationTest extends BaseIntegrationTest {
   @Test
   @DisplayName("get all foreign key relationship results, test when no query params are given")
   void testGetForeignKeyRelationshipMissingParams() {
-    Response res = makeGetCall("/expenses/v1", HttpStatus.BAD_REQUEST);
+    final Response res = makeGetCall("/expenses/v1", HttpStatus.BAD_REQUEST);
     Assertions.assertNotNull(res);
     Assertions.assertTrue(res.getErrorMessage().contains("startDate"));
   }
@@ -106,9 +106,9 @@ public class QueryIntegrationTest extends BaseIntegrationTest {
   @Test
   @DisplayName("get all foreign key relationship results, valid response given")
   void testGetForeignKeyRelationship() {
-    String startDate = "2024-09-01";
-    String endDate = "2024-09-30";
-    Response res =
+    final String startDate = "2024-09-01";
+    final String endDate = "2024-09-30";
+    final Response res =
         makeGetCall(
             String.format("/expenses/v1?startDate=%s&endDate=%s", startDate, endDate),
             HttpStatus.OK);

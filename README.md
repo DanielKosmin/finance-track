@@ -55,9 +55,9 @@ Images get published during any push to main via GitHub actions
 
 1) kill the local process and run `docker container prune` to clear any existing containers
 2) create a .env file and add the following secrets
-   - SQL_DB_URL=<>
-   - USERNAME=<>
-   - PASSWORD=<>
+    - SQL_DB_URL=<>
+    - USERNAME=<>
+    - PASSWORD=<>
 3) run
    `docker run --platform linux/amd64 -it --name finance-tracker -p 8080:8080 --env-file .env dkosmin/finance-tracker:latest`
 
@@ -68,3 +68,18 @@ A test MySQL db docker image is used to run integration tests
 1) run `docker-compose up -d` to build the test MySQL DB
 2) run `./gradlew clean test` to run the integration tests
 3) run `docker-compose down` to tear down the test MySQL DB
+
+### CheckStyle local setup
+
+Checkstyle is a static code analysis tool to help in maintaining language standards
+
+1) install the checkstyle plugin from IntelliJ
+2) add the local checkstyle file to the plugin
+    - `cmd+,`
+    - search for checkstyle and navigate to the one under tools
+    - under configuration files, press `+` and browse to the one within the project `src/main/resources/checkstyle.xml`
+    - ensure the `Scan Scope` is set to all java files including tests
+3) run `./gradlew checkstyleMain checkstyleTest` this will generate a report if any violations are present
+4) get checkstyle in the IDE by navigating to `view/tool windows/CheckStyle`
+5) after opening the tool window, select the local checkstyle files in the `Rules` dropdown, click the `check project`
+   option to use the IDE's feature to show the problem areas

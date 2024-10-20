@@ -39,7 +39,7 @@ public class FinanceTrackerService {
                   .build());
     }
 
-    String fileName = file.getOriginalFilename();
+    final String fileName = file.getOriginalFilename();
     if (fileName != null && !fileName.endsWith(".csv")) {
       return ResponseEntity.badRequest()
           .body(

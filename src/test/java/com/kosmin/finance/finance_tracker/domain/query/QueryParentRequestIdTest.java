@@ -30,7 +30,8 @@ public class QueryParentRequestIdTest {
 
   @BeforeEach
   void setUp() {
-    String query = loadYamlProperties("queries.yml").getProperty("queries.map." + GET_PARENT_ID);
+    final String query =
+        loadYamlProperties("queries.yml").getProperty("queries.map." + GET_PARENT_ID);
     map.put(GET_PARENT_ID, query);
     Mockito.when(sqlQueriesConfig.getMap()).thenReturn(map);
     queryId = new QueryParentRequestId(namedParameterJdbcTemplate, sqlQueriesConfig);
@@ -39,7 +40,7 @@ public class QueryParentRequestIdTest {
   @Test
   @DisplayName("get valid parent request id")
   void getForeignKeyRelationshipEmptyResult() {
-    TransactionMappingRequest transactionMappingRequest =
+    final TransactionMappingRequest transactionMappingRequest =
         TransactionMappingRequest.builder()
             .transactionStartDate("2024-10-01")
             .transactionEndDate("2024-10-31")
@@ -61,13 +62,13 @@ public class QueryParentRequestIdTest {
                         "Debit")),
                 Mockito.<RowMapper<Integer>>any()))
         .thenReturn(List.of(1));
-    var res = queryId.getParentRequestId(transactionMappingRequest);
+    final var res = queryId.getParentRequestId(transactionMappingRequest);
     Assertions.assertEquals(res, 1);
   }
 
   private Properties loadYamlProperties(String ymlFile) {
-    Resource resource = new ClassPathResource(ymlFile);
-    YamlPropertiesFactoryBean yamlPropertiesFactoryBean = new YamlPropertiesFactoryBean();
+    final Resource resource = new ClassPathResource(ymlFile);
+    final YamlPropertiesFactoryBean yamlPropertiesFactoryBean = new YamlPropertiesFactoryBean();
     yamlPropertiesFactoryBean.setResources(resource);
     return yamlPropertiesFactoryBean.getObject();
   }
