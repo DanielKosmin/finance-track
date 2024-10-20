@@ -1,16 +1,17 @@
 services:
   mysql:
-    image: mysql:8.0                 # Use the official MySQL image
-    container_name: myapp-mysql       # Name of the container
+    image: mysql:8.0
+    container_name: myapp-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: root       # Root password (optional for your app)
-      MYSQL_DATABASE: myapp_db        # Database name to match your application
-      MYSQL_USER: app_user            # Username for the database
-      MYSQL_PASSWORD: app_password     # Password for the database
+      # connection credentials found in application.test.yml
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: myapp_db
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: app_password
     ports:
-      - "3306:3306"                    # Expose MySQL on port 3306
+      - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql      # Persist data
+      - mysql_data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -19,4 +20,4 @@ services:
       timeout: 5s
 
 volumes:
-  mysql_data:                         # Named volume for MySQL data persistence
+  mysql_data:
