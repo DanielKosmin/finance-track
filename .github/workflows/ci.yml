@@ -6,8 +6,7 @@ on:
       - '*'
   pull_request:
     branches:
-      - main
-      - dev
+      - main  # Trigger on PRs targeting main
 
 jobs:
   unit_tests:
@@ -29,7 +28,6 @@ jobs:
   integration_tests:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -62,8 +60,7 @@ jobs:
         run: docker-compose down
 
   fast_forward_dev:
-    needs: unit_tests
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'pull_request' && github.head_ref == 'dev' && github.base_ref == 'main'
     runs-on: ubuntu-latest
 
     steps:
@@ -86,8 +83,7 @@ jobs:
           git push origin dev || echo "Failed to push to dev branch"
 
   docker_publish:
-    needs: unit_tests
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'pull_request' && github.head_ref == 'dev' && github.base_ref == 'main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
