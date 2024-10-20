@@ -1,6 +1,5 @@
 package com.kosmin.finance.finance_tracker.aspect;
 
-import com.kosmin.finance.finance_tracker.exception.ForeignKeyRelationshipNotFoundException;
 import com.kosmin.finance.finance_tracker.exception.InvalidQueryParamaterComboException;
 import com.kosmin.finance.finance_tracker.exception.ParentTransactionNotFoundException;
 import com.kosmin.finance.finance_tracker.exception.QueryMappingException;
@@ -43,7 +42,6 @@ public class FinanceTrackerServiceHandler {
       case "insertRecords" -> handleInsertRecordsException(e, response);
       case "createTableRelationship" -> handleTableRelationshipException(e, response);
       case "getTableRecords" -> handleAllRecords(e, response);
-      case "getForeignKeyRelationship" -> handleForeignKeyRelationshipException(e, response);
       default -> handleGeneralException(methodName, e, response);
     };
   }
@@ -81,14 +79,6 @@ public class FinanceTrackerServiceHandler {
       return responseBuilderService.buildInternalErrorResponse(e.getMessage(), response);
     }
     return responseBuilderService.buildNotFoundResponse(e.getMessage(), response);
-  }
-
-  private ResponseEntity<Response> handleForeignKeyRelationshipException(
-      Exception e, Response response) {
-    if (e instanceof ForeignKeyRelationshipNotFoundException) {
-      return responseBuilderService.buildNotFoundResponse(e.getMessage(), response);
-    }
-    return responseBuilderService.buildInternalErrorResponse(e.getMessage(), response);
   }
 
   private ResponseEntity<Response> handleGeneralException(
