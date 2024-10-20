@@ -9,6 +9,7 @@ plugins {
   id 'org.springframework.boot' version '3.3.4'
   id 'io.spring.dependency-management' version '1.1.6'
   id 'com.diffplug.spotless' version '6.25.0'
+  id 'checkstyle' // Added Checkstyle plugin
 }
 
 group = 'com.personal.tracker'
@@ -50,6 +51,11 @@ spotless {
   java {
     googleJavaFormat()
   }
+}
+
+checkstyle {
+  toolVersion = '10.12.0' // Set Checkstyle version
+  configFile = file("$rootDir/src/main/resources/checkstyle.xml")
 }
 
 copy {

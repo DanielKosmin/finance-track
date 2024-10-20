@@ -27,22 +27,22 @@ public class AsyncCsvProcessingService {
     try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
       switch (type) {
         case BANKING -> {
-          CsvToBean<BankingAccountModel> csvToBean =
+          final CsvToBean<BankingAccountModel> csvToBean =
               new CsvToBeanBuilder<BankingAccountModel>(reader)
                   .withType(BankingAccountModel.class)
                   .withIgnoreLeadingWhiteSpace(true)
                   .build();
-          List<BankingAccountModel> bankingAccountModels = csvToBean.parse();
+          final List<BankingAccountModel> bankingAccountModels = csvToBean.parse();
 
           bankingAccountModels.forEach(dbOperationsService::insertBankingInformation);
         }
         case CREDIT -> {
-          CsvToBean<CreditCardRecordsModel> csvToBean =
+          final CsvToBean<CreditCardRecordsModel> csvToBean =
               new CsvToBeanBuilder<CreditCardRecordsModel>(reader)
                   .withType(CreditCardRecordsModel.class)
                   .withIgnoreLeadingWhiteSpace(true)
                   .build();
-          List<CreditCardRecordsModel> bankingAccountModels = csvToBean.parse();
+          final List<CreditCardRecordsModel> bankingAccountModels = csvToBean.parse();
 
           bankingAccountModels.forEach(dbOperationsService::insertCreditInformation);
         }

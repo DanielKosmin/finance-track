@@ -41,8 +41,8 @@ public class BankingAccountModel {
   }
 
   private String formattedDate(String transactionDate) {
-    SimpleDateFormat inputFormat = new SimpleDateFormat("MM/dd/yy");
-    SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+    final SimpleDateFormat inputFormat = new SimpleDateFormat("MM/dd/yy");
+    final SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
     try {
       return outputFormat.format(inputFormat.parse(transactionDate));
     } catch (ParseException e) {

@@ -19,14 +19,14 @@ public class InsertTableRecords {
   private final SqlQueriesConfig sqlQueriesConfig;
 
   public void insertBankingInformation(BankingAccountModel bankingAccountModel) {
-    Map<String, Object> params = new HashMap<>();
+    final Map<String, Object> params = new HashMap<>();
     params.put("transactionDescription", bankingAccountModel.getTransactionDescription());
     params.put("transactionDate", bankingAccountModel.getTransactionDate());
     params.put("transactionType", bankingAccountModel.getTransactionType());
     params.put("transactionAmount", bankingAccountModel.getTransactionAmount());
     params.put("balance", bankingAccountModel.getBalance());
 
-    int insertionResponse =
+    final int insertionResponse =
         jdbcTemplate.update(sqlQueriesConfig.getMap().get("insert-banking-records"), params);
     if (insertionResponse != 1) {
       log.error("Insert banking Records Failed for {}", bankingAccountModel);
@@ -34,13 +34,13 @@ public class InsertTableRecords {
   }
 
   public void insertCreditInformation(CreditCardRecordsModel creditCardRecordsModel) {
-    Map<String, Object> params = new HashMap<>();
+    final Map<String, Object> params = new HashMap<>();
     params.put("transactionDate", creditCardRecordsModel.getTransactionDate());
     params.put("transactionDescription", creditCardRecordsModel.getTransactionDescription());
     params.put("transactionCategory", creditCardRecordsModel.getTransactionCategory());
     params.put("transactionType", creditCardRecordsModel.getTransactionType());
     params.put("transactionAmount", creditCardRecordsModel.getTransactionAmount());
-    int insertionResponse =
+    final int insertionResponse =
         jdbcTemplate.update(sqlQueriesConfig.getMap().get("insert-credit-records"), params);
     if (insertionResponse != 1)
       log.error("Insert credit Records Failed for {}", creditCardRecordsModel);

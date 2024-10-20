@@ -27,14 +27,14 @@ public class QueryParentRequestId {
    * @return parent request ID
    */
   public int getParentRequestId(TransactionMappingRequest request) {
-    Map<String, Object> params = new HashMap<>();
-    List<String> updatedDates = FinanceTrackerUtil.incrementDates(request);
+    final Map<String, Object> params = new HashMap<>();
+    final List<String> updatedDates = FinanceTrackerUtil.incrementDates(request);
     params.put("startDate", updatedDates.get(0));
     params.put("endDate", updatedDates.get(1));
     params.put("description", request.getTransactionDescription());
     params.put("type", "Debit");
     log.info("Getting Primary Key with params {}", params);
-    Optional<Integer> results =
+    final Optional<Integer> results =
         namedParameterJdbcTemplate
             .query(
                 sqlQueriesConfig.getMap().get("get-parent-id-of-transaction"),

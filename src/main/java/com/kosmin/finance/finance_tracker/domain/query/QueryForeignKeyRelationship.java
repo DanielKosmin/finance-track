@@ -23,10 +23,10 @@ public class QueryForeignKeyRelationship {
   private final SqlQueriesConfig sqlQueriesConfig;
 
   public Response getForeignKeyRelationship(String startDate, String endDate) {
-    Map<String, Object> params = new HashMap<>();
+    final Map<String, Object> params = new HashMap<>();
     params.put("startDate", startDate);
     params.put("endDate", endDate);
-    List<ForeignKeyEntity> entities =
+    final List<ForeignKeyEntity> entities =
         namedParameterJdbcTemplate.query(
             sqlQueriesConfig.getMap().get("get-foreign-key-relationship"), params, this::mapRows);
     if (entities.isEmpty())

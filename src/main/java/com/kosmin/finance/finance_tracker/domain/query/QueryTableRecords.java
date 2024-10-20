@@ -20,7 +20,7 @@ public class QueryTableRecords {
   private final SqlQueriesConfig sqlQueriesConfig;
 
   public Response getBankingTable() {
-    List<FinancialRecordsEntity> entities =
+    final List<FinancialRecordsEntity> entities =
         jdbcTemplate.query(sqlQueriesConfig.getMap().get("get-banking-record"), this::mapRows);
     if (entities.isEmpty()) throw new RuntimeException("No banking Records found");
     return Response.builder()

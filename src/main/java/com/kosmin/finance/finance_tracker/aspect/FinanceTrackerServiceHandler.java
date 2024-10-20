@@ -33,7 +33,7 @@ public class FinanceTrackerServiceHandler {
   }
 
   private ResponseEntity<Response> handleException(String methodName, Exception e) {
-    Response response = Response.builder().status(Status.FAILED.getValue()).build();
+    final Response response = Response.builder().status(Status.FAILED.getValue()).build();
     log.error("Exception in method: {} - {}", methodName, e.getMessage());
 
     return switch (methodName) {

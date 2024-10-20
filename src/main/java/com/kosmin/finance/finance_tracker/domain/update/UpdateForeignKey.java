@@ -22,14 +22,14 @@ public class UpdateForeignKey {
   private final QueryParentRequestId queryParentRequestId;
 
   public Response createTableRelationship(TransactionMappingRequest request) {
-    Map<String, Object> params = new HashMap<>();
-    int primaryKeyParentId = queryParentRequestId.getParentRequestId(request);
+    final Map<String, Object> params = new HashMap<>();
+    final int primaryKeyParentId = queryParentRequestId.getParentRequestId(request);
     params.put("startDate", request.getTransactionStartDate());
     params.put("endDate", request.getTransactionEndDate());
     params.put("parentId", primaryKeyParentId);
     params.put("type", request.getTransactionType());
     log.info("Updating foreign key(s) with params: {}", params);
-    int rowsAffected =
+    final int rowsAffected =
         jdbcTemplate.update(
             sqlQueriesConfig.getMap().get("update-foreign-key-with-parent-id"), params);
     return Response.builder()

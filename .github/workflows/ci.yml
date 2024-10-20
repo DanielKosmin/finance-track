@@ -10,6 +10,21 @@ on:
       - dev
 
 jobs:
+  checkstyle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Run Checkstyle
+        run: ./gradlew checkstyleMain checkstyleTest
+
   unit_tests:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
@@ -76,3 +91,26 @@ jobs:
         run: |
           docker tag finance-tracker:latest ${{ secrets.DOCKER_USERNAME }}/finance-tracker:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/finance-tracker:latest
+          
+  fast_forward_dev:
+    needs: docker_publish
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+      - name: Fetch and Fast-forward dev branch
+        run: |
+          git fetch origin dev
+          git checkout dev
+          git merge --ff-only main
+          git push origin dev

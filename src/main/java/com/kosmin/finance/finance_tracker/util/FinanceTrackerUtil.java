@@ -20,16 +20,16 @@ public class FinanceTrackerUtil {
    */
   public static List<String> incrementDates(Object request) {
     if (request instanceof TransactionMappingRequest) {
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+      final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-      LocalDate startDate =
+      final LocalDate startDate =
           LocalDate.parse(
               ((TransactionMappingRequest) request).getTransactionStartDate(), formatter);
-      LocalDate endDate =
+      final LocalDate endDate =
           LocalDate.parse(((TransactionMappingRequest) request).getTransactionEndDate(), formatter);
 
-      LocalDate updatedStartDate = startDate.plusMonths(1);
-      LocalDate updatedEndDate = endDate.plusMonths(1);
+      final LocalDate updatedStartDate = startDate.plusMonths(1);
+      final LocalDate updatedEndDate = endDate.plusMonths(1);
 
       return List.of(updatedStartDate.format(formatter), updatedEndDate.format(formatter));
     }
