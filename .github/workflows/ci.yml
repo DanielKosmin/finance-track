@@ -62,7 +62,7 @@ jobs:
         run: docker-compose down
 
   fast_forward_dev:
-    needs: docker_publish
+    needs: unit_tests
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
