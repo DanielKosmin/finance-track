@@ -3,17 +3,59 @@
         "https://checkstyle.org/dtds/configuration_1_3.dtd">
 <module name="Checker">
     <module name="TreeWalker">
-        <!-- Tree-based checks go here -->
+        <!-- Checks for whitespace after tokens -->
         <module name="WhitespaceAfter"/>
-        <module name="MethodLength"/>
-        <module name="ParameterName"/>
-        <module name="IllegalImport"/>
+        <!-- Enforces a maximum length for methods -->
+        <module name="MethodLength">
+            <property name="max" value="100"/>
+        </module>
+        <!-- Enforces naming conventions for method parameters (lower camel case) -->
+        <module name="ParameterName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
+        <!-- Ensures local variables are declared final when appropriate -->
         <module name="FinalLocalVariable"/>
+        <!-- Prohibits the use of wildcard imports -->
         <module name="AvoidStarImport"/>
+        <!-- Flags empty catch blocks to encourage better error handling -->
+        <module name="EmptyCatchBlock"/>
+        <!-- Enforces a specific order of import statements -->
+        <module name="ImportOrder"/>
+        <!-- Flags imports that are not used in the code -->
+        <module name="UnusedImports"/>
+        <!-- Limits the complexity of methods -->
+        <module name="CyclomaticComplexity">
+            <property name="max" value="10"/>
+        </module>
+        <!-- Enforces naming conventions for types (upper camel case) -->
+        <module name="TypeName">
+            <property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
+        </module>
+        <!-- Enforces naming conventions for member variables (lower camel case) -->
+        <module name="MemberName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
+        <!-- Enforces naming conventions for constants (uppercase with underscores) -->
+        <module name="ConstantName">
+            <property name="format" value="^[A-Z][A-Z0-9_]*$"/>
+        </module>
+        <!-- Limits the nesting of if statements -->
+        <module name="NestedIfDepth">
+            <property name="max" value="3"/>
+        </module>
+        <!-- Checks for missing @Override annotations on overridden methods -->
+        <module name="MissingOverride"/>
+        <!-- Enforces a maximum number of exceptions thrown by methods -->
+        <module name="ThrowsCount">
+            <property name="max" value="3"/>
+        </module>
+        <!-- Flags redundant modifiers in declarations -->
+        <module name="RedundantModifier"/>
+        <!-- Flags empty blocks (e.g., {} without content) -->
+        <module name="EmptyBlock"/>
     </module>
-
-    <!-- LineLength is a file-based check -->
-    <module name="LineLength">
-        <property name="max" value="120"/>
+    <!-- Enforces a maximum length for files -->
+    <module name="FileLength">
+        <property name="max" value="200"/>
     </module>
 </module>
