@@ -1,5 +1,6 @@
 package com.kosmin.finance.finance_tracker.service;
 
+import com.kosmin.finance.finance_tracker.exception.InvalidQueryParamaterComboException;
 import com.kosmin.finance.finance_tracker.model.Response;
 import com.kosmin.finance.finance_tracker.model.Status;
 import com.kosmin.finance.finance_tracker.model.TransactionMappingRequest;
@@ -7,6 +8,7 @@ import com.kosmin.finance.finance_tracker.model.Type;
 import com.kosmin.finance.finance_tracker.service.asyncService.AsyncCsvProcessingService;
 import com.kosmin.finance.finance_tracker.service.databaseOperations.DbOperationsService;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,8 +71,23 @@ public class FinanceTrackerService {
         .body(dbOperationsService.createTableRelationship(request));
   }
 
-  public ResponseEntity<Response> getAllBankingRecords() {
-    return ResponseEntity.ok().body(dbOperationsService.getBankingTable());
+  public ResponseEntity<Response> getTableRecords(
+      Boolean bankingTable, Boolean creditTable, LocalDate startDate, LocalDate endDate) {
+    final boolean isBankingTable = Optional.ofNullable(bankingTable).orElse(false);
+    final boolean isCreditTable = Optional.ofNullable(creditTable).orElse(false);
+    if (isBankingTable || isCreditTable) {
+      return ResponseEntity.ok()
+          .body(dbOperationsService.getTableRecords(isBankingTable, isCreditTable));
+    } else if (Optional.ofNullable(startDate).isPresent()
+        && Optional.ofNullable(endDate).isPresent()) {
+      return ResponseEntity.ok()
+          .body(
+              dbOperationsService.getForeignKeyRelationship(
+                  startDate.toString(), endDate.toString()));
+    } else {
+      throw new InvalidQueryParamaterComboException(
+          "Invalid Query Param Combo", bankingTable, creditTable, startDate, endDate);
+    }
   }
 
   public ResponseEntity<Response> getForeignKeyRelationship(String startDate, String endDate) {

@@ -35,6 +35,9 @@ queries:
     get-banking-record: |
       SELECT * FROM checking_account_records
 
+    get-credit-record: |
+      SELECT * FROM credit_records
+
     get-parent-id-of-transaction: |
       SELECT record_id 
       FROM checking_account_records 

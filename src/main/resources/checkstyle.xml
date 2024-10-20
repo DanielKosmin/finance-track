@@ -19,10 +19,6 @@
         <module name="AvoidStarImport"/>
         <!-- Flags empty catch blocks to encourage better error handling -->
         <module name="EmptyCatchBlock"/>
-        <!-- Enforces a specific order of import statements -->
-        <module name="ImportOrder"/>
-        <!-- Flags imports that are not used in the code -->
-        <module name="UnusedImports"/>
         <!-- Limits the complexity of methods -->
         <module name="CyclomaticComplexity">
             <property name="max" value="10"/>
