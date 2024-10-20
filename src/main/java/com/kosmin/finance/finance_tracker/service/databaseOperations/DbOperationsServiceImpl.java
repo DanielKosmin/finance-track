@@ -38,8 +38,8 @@ public class DbOperationsServiceImpl implements DbOperationsService {
   }
 
   @Override
-  public Response getBankingTable() {
-    return queryTableRecords.getBankingTable();
+  public Response getTableRecords(boolean bankingTable, boolean creditTable) {
+    return queryTableRecords.getTableRecords(bankingTable, creditTable);
   }
 
   @Override

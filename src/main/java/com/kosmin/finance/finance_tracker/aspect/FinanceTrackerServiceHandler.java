@@ -1,7 +1,8 @@
 package com.kosmin.finance.finance_tracker.aspect;
 
-import com.kosmin.finance.finance_tracker.exception.ForeignKeyRelationshipNotFoundException;
+import com.kosmin.finance.finance_tracker.exception.InvalidQueryParamaterComboException;
 import com.kosmin.finance.finance_tracker.exception.ParentTransactionNotFoundException;
+import com.kosmin.finance.finance_tracker.exception.QueryMappingException;
 import com.kosmin.finance.finance_tracker.model.Response;
 import com.kosmin.finance.finance_tracker.model.Status;
 import com.kosmin.finance.finance_tracker.service.responseBuilder.ResponseBuilderService;
@@ -40,8 +41,7 @@ public class FinanceTrackerServiceHandler {
       case "createTables" -> handleCreateTablesException(e, response);
       case "insertRecords" -> handleInsertRecordsException(e, response);
       case "createTableRelationship" -> handleTableRelationshipException(e, response);
-      case "getAllBankingRecords" -> handleAllRecords(e, response);
-      case "getForeignKeyRelationship" -> handleForeignKeyRelationshipException(e, response);
+      case "getTableRecords" -> handleAllRecords(e, response);
       default -> handleGeneralException(methodName, e, response);
     };
   }
@@ -72,15 +72,13 @@ public class FinanceTrackerServiceHandler {
   }
 
   private ResponseEntity<Response> handleAllRecords(Exception e, Response response) {
-    return responseBuilderService.buildNotFoundResponse(e.getMessage(), response);
-  }
-
-  private ResponseEntity<Response> handleForeignKeyRelationshipException(
-      Exception e, Response response) {
-    if (e instanceof ForeignKeyRelationshipNotFoundException) {
-      return responseBuilderService.buildNotFoundResponse(e.getMessage(), response);
+    if (e instanceof InvalidQueryParamaterComboException) {
+      return responseBuilderService.buildBadRequestResponse(e.getMessage(), response);
     }
-    return responseBuilderService.buildInternalErrorResponse(e.getMessage(), response);
+    if (e instanceof QueryMappingException) {
+      return responseBuilderService.buildInternalErrorResponse(e.getMessage(), response);
+    }
+    return responseBuilderService.buildNotFoundResponse(e.getMessage(), response);
   }
 
   private ResponseEntity<Response> handleGeneralException(

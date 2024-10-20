@@ -13,7 +13,7 @@ public interface DbOperationsService {
 
   void insertCreditInformation(CreditCardRecordsModel creditCardRecordsModel);
 
-  Response getBankingTable();
+  Response getTableRecords(boolean bankingTable, boolean creditTable);
 
   Response createTableRelationship(TransactionMappingRequest transactionMappingRequest);
 

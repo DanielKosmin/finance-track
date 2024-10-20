@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kosmin.finance.finance_tracker.domain.create.CreateTables;
 import com.kosmin.finance.finance_tracker.domain.insert.InsertTableRecords;
 import com.kosmin.finance.finance_tracker.domain.update.UpdateForeignKey;
+import com.kosmin.finance.finance_tracker.model.BankingAccountModel;
+import com.kosmin.finance.finance_tracker.model.CreditCardRecordsModel;
+import com.kosmin.finance.finance_tracker.model.TransactionMappingRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -22,6 +25,32 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @ActiveProfiles("test")
 public abstract class BaseIntegrationTest {
 
+  protected final BankingAccountModel testBankingTableModel =
+      BankingAccountModel.builder()
+          .transactionDescription("chase")
+          .transactionDate("2024-10-01")
+          .transactionType("Debit")
+          .transactionAmount(200.00)
+          .balance(2000.00)
+          .build();
+  protected final CreditCardRecordsModel testCreditTableModel =
+      CreditCardRecordsModel.builder()
+          .transactionDate("2024-09-01")
+          .transactionDescription("chase")
+          .transactionCategory("transaction category")
+          .transactionType("sale")
+          .transactionAmount(200.00)
+          .build();
+  protected final TransactionMappingRequest transactionMappingRequest =
+      TransactionMappingRequest.builder()
+          .transactionStartDate("2024-09-01")
+          .transactionEndDate("2024-09-30")
+          .transactionDescription("%chase%")
+          .transactionType("sale")
+          .build();
+
+  protected static final String COMMON_POST_URL = "expenses/v1/insert";
+  protected static final String COMMON_GET_URL = "expenses/v1/records";
   @Autowired protected CreateTables createTables;
   @Autowired protected JdbcTemplate jdbcTemplate;
   @Autowired protected InsertTableRecords insertTableRecords;

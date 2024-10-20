@@ -45,18 +45,13 @@ public class RequestController {
     return financeTrackerService.createTableRelationship(request);
   }
 
-  @GetMapping("banking")
-  public ResponseEntity<Response> getBankingTable() {
+  @GetMapping("records")
+  public ResponseEntity<Response> getTableRecords(
+      @RequestParam(required = false) Boolean bankingTable,
+      @RequestParam(required = false) Boolean creditTable,
+      @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+      @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
 
-    return financeTrackerService.getAllBankingRecords();
-  }
-
-  @GetMapping()
-  public ResponseEntity<Response> getForeignKeyRelationship(
-      @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-      @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
-
-    return financeTrackerService.getForeignKeyRelationship(
-        startDate.toString(), endDate.toString());
+    return financeTrackerService.getTableRecords(bankingTable, creditTable, startDate, endDate);
   }
 }
