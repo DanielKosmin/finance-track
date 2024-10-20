@@ -89,9 +89,4 @@ public class FinanceTrackerService {
           "Invalid Query Param Combo", bankingTable, creditTable, startDate, endDate);
     }
   }
-
-  public ResponseEntity<Response> getForeignKeyRelationship(String startDate, String endDate) {
-    return ResponseEntity.ok()
-        .body(dbOperationsService.getForeignKeyRelationship(startDate, endDate));
-  }
 }
