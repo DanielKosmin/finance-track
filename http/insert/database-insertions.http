@@ -1,8 +1,17 @@
-### POST upload file
+### POST upload banking csv
 POST {{FINANCE_TRACKER_BASE_URL}}/expenses/v1/insert
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary
-Content-Disposition: form-data; name="file"; filename="<filename>.csv"
+Content-Disposition: form-data; name="file"; filename="banking_records_example.csv"
 
-< /path/to/csv/<filename>.csv
+< banking_records_example.csv
+
+### POST upload credit csv
+POST {{FINANCE_TRACKER_BASE_URL}}/expenses/v1/insert
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="credit_records_example.csv"
+
+< credit_records_example.csv
