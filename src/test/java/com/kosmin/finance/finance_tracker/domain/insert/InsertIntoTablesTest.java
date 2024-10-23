@@ -31,43 +31,72 @@ public class InsertIntoTablesTest {
 
   @BeforeEach
   void setUp() {
-    final String bankingQuery =
-        loadYamlProperties("queries.yml").getProperty("queries.map." + INSERT_INTO_BANKING_TABLE);
-    final String creditQuery =
-        loadYamlProperties("queries.yml").getProperty("queries.map." + INSERT_INTO_CREDIT_TABLE);
+    final Properties properties = loadYamlProperties("queries.yml");
+
+    // Fetch the SQL queries from YAML and ensure they are not null
+    final String bankingQuery = properties.getProperty("queries.map." + INSERT_INTO_BANKING_TABLE);
+    final String creditQuery = properties.getProperty("queries.map." + INSERT_INTO_CREDIT_TABLE);
+
+    // Ensure we add these to the map
     map.put(INSERT_INTO_BANKING_TABLE, bankingQuery);
     map.put(INSERT_INTO_CREDIT_TABLE, creditQuery);
-    Mockito.when(sqlQueriesConfig.getMap()).thenReturn(map);
+
+    // Inject into insertTableRecords
     insertTableRecords = new InsertTableRecords(namedParameterJdbcTemplate, sqlQueriesConfig);
   }
 
   @Test
   @DisplayName("insert records into banking table")
   void insertRecordsIntoBankingTable() {
+    final BankingAccountModel bankingAccountModel =
+        BankingAccountModel.builder()
+            .transactionDescription("")
+            .transactionDate("")
+            .transactionType("")
+            .transactionAmount(0.0)
+            .balance(0.0)
+            .build();
+    final Map<String, Object> params = new HashMap<>();
+    params.put("transactionDescription", bankingAccountModel.getTransactionDescription());
+    params.put("transactionDate", bankingAccountModel.getTransactionDate());
+    params.put("transactionType", bankingAccountModel.getTransactionType());
+    params.put("transactionAmount", bankingAccountModel.getTransactionAmount());
+    params.put("balance", bankingAccountModel.getBalance());
     Mockito.when(
             namedParameterJdbcTemplate.update(
-                Mockito.eq(sqlQueriesConfig.getMap().get(INSERT_INTO_BANKING_TABLE)),
-                Mockito.anyMap()))
+                sqlQueriesConfig.getMap().get(INSERT_INTO_BANKING_TABLE), params))
         .thenReturn(1);
     Assertions.assertDoesNotThrow(
-        () -> insertTableRecords.insertBankingInformation(Mockito.mock(BankingAccountModel.class)));
+        () -> insertTableRecords.insertBankingInformation(bankingAccountModel));
     Mockito.verify(namedParameterJdbcTemplate, Mockito.times(1))
-        .update(Mockito.anyString(), Mockito.anyMap());
+        .update(sqlQueriesConfig.getMap().get(INSERT_INTO_BANKING_TABLE), params);
   }
 
   @Test
   @DisplayName("insert records into credit table")
   void insertRecordsIntoCreditTable() {
+    final CreditCardRecordsModel creditCardRecordsModel =
+        CreditCardRecordsModel.builder()
+            .transactionAmount(0.0)
+            .transactionType("")
+            .transactionCategory("")
+            .transactionDescription("")
+            .transactionDate("")
+            .build();
+    final Map<String, Object> params = new HashMap<>();
+    params.put("transactionDate", creditCardRecordsModel.getTransactionDate());
+    params.put("transactionDescription", creditCardRecordsModel.getTransactionDescription());
+    params.put("transactionCategory", creditCardRecordsModel.getTransactionCategory());
+    params.put("transactionType", creditCardRecordsModel.getTransactionType());
+    params.put("transactionAmount", creditCardRecordsModel.getTransactionAmount());
     Mockito.when(
             namedParameterJdbcTemplate.update(
-                Mockito.eq(sqlQueriesConfig.getMap().get(INSERT_INTO_CREDIT_TABLE)),
-                Mockito.anyMap()))
+                sqlQueriesConfig.getMap().get(INSERT_INTO_CREDIT_TABLE), params))
         .thenReturn(1);
     Assertions.assertDoesNotThrow(
-        () ->
-            insertTableRecords.insertCreditInformation(Mockito.mock(CreditCardRecordsModel.class)));
+        () -> insertTableRecords.insertCreditInformation(creditCardRecordsModel));
     Mockito.verify(namedParameterJdbcTemplate, Mockito.times(1))
-        .update(Mockito.anyString(), Mockito.anyMap());
+        .update(sqlQueriesConfig.getMap().get(INSERT_INTO_CREDIT_TABLE), params);
   }
 
   private Properties loadYamlProperties(String ymlFile) {
